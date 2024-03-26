@@ -5,5 +5,8 @@ class Player:
     def sum_years(self, action: str, years: int):
         self.years += years
 
-    def play(self, full_history: list[list], history: list) -> str:
+    def clear(self):
+        self.years = 0
+
+    def play(self, index_player, full_history: list[list], history: list) -> str:
         pass
