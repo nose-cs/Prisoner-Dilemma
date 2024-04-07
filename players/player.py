@@ -1,12 +1,12 @@
 class Player:
     def __init__(self) -> None:
-        self.years = 0
+        self.score = 0
 
-    def sum_years(self, action: str, years: int):
-        self.years += years
+    def sum_score(self, matrix, action: int, score: int):
+        self.score += score
 
     def clear(self):
-        self.years = 0
+        self.score = 0
 
-    def play(self, index_player, full_history: list[list], history: list) -> str:
+    def play(self, matrix, full_history: list[list], history: dict) -> str:
         pass
