@@ -1,10 +1,11 @@
-from players.player import Player
+from src.players import Player
+
 
 class BadGuy(Player):
-    def play(self, matrix, full_history: list[list], history: dict) -> str:
+    def play(self, matrix, history: dict) -> int:
         maxx = None
         index_max = None
-        
+
         for i, row in enumerate(matrix[0]):
             min_row = min(row, key=lambda actions: actions[0])
 
@@ -12,4 +13,4 @@ class BadGuy(Player):
                 maxx = min_row
                 index_max = i
 
-        return index_max       
+        return index_max

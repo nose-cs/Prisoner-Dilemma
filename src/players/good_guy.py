@@ -1,7 +1,8 @@
-from players.player import Player
+from src.players import Player
+
 
 class GoodGuy(Player):
-    def play(self, matrix, full_history: list[list], history: dict) -> str:
+    def play(self, matrix, history: dict) -> int:
         max = None
         index_max = None
 
