@@ -1,4 +1,7 @@
-class Player:
+from abc import ABC, abstractmethod
+
+
+class Player(ABC):
     def __init__(self) -> None:
         self.score = 0
 
@@ -8,5 +11,6 @@ class Player:
     def clear(self):
         self.score = 0
 
-    def play(self, matrix, full_history: list[list], history: dict) -> str:
+    @abstractmethod
+    def play(self, matrix, history: dict) -> int:
         pass

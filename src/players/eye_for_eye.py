@@ -1,23 +1,24 @@
-from players.player import Player
-from players.good_guy import GoodGuy
+from src.players import GoodGuy, Player
+
 
 class EyeForEye(Player):
-    def play(self, matrix, full_history: list[list], history: dict) -> str:
+    def play(self, matrix, history: dict) -> int:
         if matrix[1] not in history:
-            return GoodGuy().play(matrix, full_history, history)
+            return GoodGuy().play(matrix, history)
         return history[matrix[1]][-1]
-    
+
+
 class AdaptiveEyeForEye(Player):
-    def __init__(self, window = 5) -> None:
+    def __init__(self, window=5) -> None:
         super().__init__()
         self.window = window
 
-    def play(self, matrix, full_history: list[list], history: list) -> str:
+    def play(self, matrix, history: dict) -> int:
         if matrix[1] not in history or len(history[matrix[1]]) < self.window:
-            return GoodGuy().play(matrix, full_history, history)
-        
+            return GoodGuy().play(matrix, history)
+
         last_plays = history[matrix[1]][-self.window:]
-        
+
         count = {}
 
         for play in last_plays:

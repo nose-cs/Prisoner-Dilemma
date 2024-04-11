@@ -1,10 +1,11 @@
-from players.player import Player
-from players.random import Random
 import random
+
 import numpy as np
 from sklearn.metrics.pairwise import cosine_similarity
-from generate_matrix import generate_matrix, get_matrix_len, get_vector_len
-from players.good_guy import GoodGuy
+
+from src.generate_matrix import get_matrix_len, get_vector_len, generate_matrix
+from src.players import Player, Random, GoodGuy
+
 
 class SimpleMetaHeuristicGuy(Player):
     def __init__(self) -> None:
@@ -19,18 +20,19 @@ class SimpleMetaHeuristicGuy(Player):
 
                 if sim > 0.9:
                     return id
-                
+
         return None
 
     def sum_score(self, matrix, action: int, score: int):
         super().sum_score(matrix, action, score)
 
         _, vector = matrix
-        
+
         id_vector = self.getMemoryVectorSimilar(vector, action)
 
         if id_vector:
-            self.memory[id_vector, action] = (self.memory[id_vector, action][0] + score, self.memory[id_vector, action][1] + 1)
+            self.memory[id_vector, action] = (
+                self.memory[id_vector, action][0] + score, self.memory[id_vector, action][1] + 1)
         else:
             self.memory[vector, action] = (score, 1)
             id_vector = vector
@@ -44,20 +46,20 @@ class SimpleMetaHeuristicGuy(Player):
         else:
             self.max_avg[id_vector] = (avg, action)
 
-
     def clear(self):
         super().clear()
         self.max_avg = {}
         self.memory = {}
 
-    def play(self, matrix, full_history: list[list], history: dict) -> str:
+    def play(self, matrix, history: dict) -> int:
         id_vector = self.getMemoryVectorSimilar(matrix[1])
 
         if random.random() < 0.1 or not id_vector:  # Exploration
-            return Random().play(matrix, full_history, history)
+            return Random().play(matrix, history)
         else:  # Exploitation
             return self.max_avg[id_vector][1]
-        
+
+
 class GeneticGuy(Player):
     def __init__(self) -> None:
         super().__init__()
@@ -68,7 +70,7 @@ class GeneticGuy(Player):
         for generation in range(10):
             print(generation)
             population, fitnesses = self.evolve_population(population)
-            
+
         best_fitness = max(fitnesses)
         index_best_strategy = fitnesses.index(best_fitness)
         best_strategy = population[index_best_strategy]
@@ -96,21 +98,21 @@ class GeneticGuy(Player):
 
         return best
 
-    def play(self, matrix, full_history: list[list], history: dict) -> str:
+    def play(self, matrix, history: dict) -> int:
         shistory = self.getOponentSimilarHistory(history, matrix[1])
 
         if shistory:
             oponent_history = shistory[-self.history_length:] if len(shistory) >= self.history_length else shistory
             return self.getStrategyResponse(self.strategy, oponent_history, matrix[1])
-        
-        return GoodGuy().play(matrix, full_history, history)
+
+        return GoodGuy().play(matrix, history)
 
     def getStrategyResponse(self, strategy, oponent_history, current_vector):
         best = None
-        sim_best = None 
+        sim_best = None
 
         if len(oponent_history) < self.history_length:
-                oponent_history = list(oponent_history) + [0] * (self.history_length - len(oponent_history))
+            oponent_history = list(oponent_history) + [0] * (self.history_length - len(oponent_history))
 
         for history, vector in strategy.keys():
             new_current_vector = current_vector
@@ -133,7 +135,7 @@ class GeneticGuy(Player):
 
     def initialize_strategy(self):
         strategy = {}
-        
+
         for i in range(10):
             n = np.random.randint(2, 3)
 
@@ -144,7 +146,6 @@ class GeneticGuy(Player):
             strategy[(history, vector)] = response
         return strategy
 
-
     def fitness(self, strategy, simulations=10):
         total_gain = 0
         for _ in range(simulations):
@@ -153,11 +154,10 @@ class GeneticGuy(Player):
             opponent_history = np.random.choice(range(0, len(gain_matrix)), size=self.history_length)
             player_move = self.getStrategyResponse(strategy, opponent_history, vector_matrix)
             opponent_move = np.random.randint(0, len(gain_matrix))
-            
-            total_gain += gain_matrix[player_move][opponent_move][0]
-            
-        return total_gain / simulations
 
+            total_gain += gain_matrix[player_move][opponent_move][0]
+
+        return total_gain / simulations
 
     def mutate(self, strategy, rate=0.1):
         for history, vector in strategy.keys():
@@ -165,27 +165,26 @@ class GeneticGuy(Player):
                 strategy[history, vector] = np.random.randint(0, get_matrix_len(len(vector)))
         return strategy
 
-
     def crossover(self, parent1, parent2):
         crossover_point = np.random.randint(1, len(parent1) - 1)
         son = list(parent1.items())[:crossover_point] + list(parent2.items())[crossover_point:]
         return {key: value for key, value in son}
 
     def select_population(self, population, fitnesses, num_selected):
-            selected = random.choices(population, weights=fitnesses, k=num_selected)
-            return selected
+        selected = random.choices(population, weights=fitnesses, k=num_selected)
+        return selected
 
     def evolve_population(self, population):
         new_population = []
         fitness_scores = [self.fitness(strategy) for strategy in population]
 
         # Selection
-        #selected_indices = np.argsort(fitness_scores)[-len(population)//2:]
+        # selected_indices = np.argsort(fitness_scores)[-len(population)//2:]
         selected = self.select_population(population, fitness_scores, len(population) // 2)
-        
+
         while len(new_population) < len(population):
             parent1, parent2 = random.sample(selected, 2)
-            #parent1, parent2 = population[index1], population[index2]
+            # parent1, parent2 = population[index1], population[index2]
 
             # Cross
             son = self.crossover(parent1, parent2)
@@ -196,9 +195,6 @@ class GeneticGuy(Player):
             new_population.append(son)
 
         return new_population, fitness_scores
-
-
-
 
     # def get_plays(self, simulate_tournament, num_rounds, oponent):
     #     def generate_strategy():
@@ -227,7 +223,7 @@ class GeneticGuy(Player):
 
     #     population = None
     #     new_generation = [generate_strategy() for _ in range(500)]
-        
+
     #     for generation in range(50):
     #         population = new_generation
 
@@ -239,7 +235,7 @@ class GeneticGuy(Player):
     #         fitnesses = fitnesses.tolist()
 
     #         selected = select_population(population, fitnesses, len(population) // 2)
-            
+
     #         new_generation = []
     #         while len(new_generation) < len(population):
     #             father1, father2 = random.sample(selected, 2)
