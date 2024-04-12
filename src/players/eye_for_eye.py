@@ -1,11 +1,11 @@
-from src.players import GoodGuy, Player
+from src.players import GoodGuy, Player, GameState
 
 
 class EyeForEye(Player):
-    def play(self, matrix, history: dict) -> int:
-        if matrix[1] not in history:
-            return GoodGuy().play(matrix, history)
-        return history[matrix[1]][-1]
+    def play(self, game_state: GameState) -> int:
+        if game_state.vector not in game_state.history:
+            return GoodGuy().play(game_state)
+        return game_state.history[game_state.vector][-1]
 
 
 class AdaptiveEyeForEye(Player):
@@ -13,11 +13,11 @@ class AdaptiveEyeForEye(Player):
         super().__init__()
         self.window = window
 
-    def play(self, matrix, history: dict) -> int:
-        if matrix[1] not in history or len(history[matrix[1]]) < self.window:
-            return GoodGuy().play(matrix, history)
+    def play(self, game_state: GameState) -> int:
+        if game_state.vector not in game_state.history or len(game_state.history[game_state.vector]) < self.window:
+            return GoodGuy().play(game_state)
 
-        last_plays = history[matrix[1]][-self.window:]
+        last_plays = game_state.history[game_state.vector][-self.window:]
 
         count = {}
 

@@ -28,22 +28,25 @@ def vectorize(matrix):
                     vector.append(1)
     return tuple(vector)
 
-
 def generate_matrix():
-    # n = np.random.randint(2, 4)
-    # matrix = [[(np.random.randint(-5, 5), np.random.randint(-5, 5)) if k >= j else 0 for k in range(n)] for j in range(n)]
+    return prisoner_dilemma_matrix()
 
-    # for i in range(n):
-    #     for j in range(n):
-    #         if j < i:
-    #             matrix[i][j] = (matrix[j][i][1], matrix[j][i][0])
-    #         elif j == i:
-    #             matrix[i][j] = (matrix[i][j][0], matrix[i][j][0])
-    #         else:
-    #             break
 
-    matrix = [[(3, 3), (0, 5)], [(5, 0), (1, 1)]]
-
+def prisoner_dilemma_matrix():
+    # We are going to sum a constant to all the values in the matrix to avoid negative values
+    # Original matrix is [[(-3, -3), (0, -5)], [(-5, 0), (-1, -1)]]
+    matrix = [[(2, 2), (5, 0)], [(0, 5), (4, 4)]]
     fixed_matrix = tuple(tuple(row) for row in matrix)
+    return fixed_matrix, vectorize(fixed_matrix)
 
-    return (fixed_matrix, vectorize(fixed_matrix))
+
+def battle_of_sexes_matrix():
+    matrix = [[(2, 1), (0, 0)], [(0, 0), (1, 2)]]
+    fixed_matrix = tuple(tuple(row) for row in matrix)
+    return fixed_matrix, vectorize(fixed_matrix)
+
+
+def free_money_matrix():
+    matrix = [[(10, 10), (0, 0)], [(0, 0), (0, 0)]]
+    fixed_matrix = tuple(tuple(row) for row in matrix)
+    return fixed_matrix, vectorize(fixed_matrix)
