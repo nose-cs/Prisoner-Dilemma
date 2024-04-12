@@ -4,7 +4,7 @@ import numpy as np
 from sklearn.metrics.pairwise import cosine_similarity
 
 from src.generate_matrix import get_matrix_len, get_vector_len, generate_matrix
-from src.players import Player, Random, GoodGuy
+from src.players import Player, Random, GoodGuy, GameState
 
 
 class SimpleMetaHeuristicGuy(Player):
@@ -13,7 +13,7 @@ class SimpleMetaHeuristicGuy(Player):
         self.max_avg = {}
         self.memory = {}
 
-    def getMemoryVectorSimilar(self, vector, action=None):
+    def get_memory_vector_similar(self, vector, action=None):
         for id, a in self.memory.keys():
             if (action is None or action == a) and len(id) == len(vector):
                 sim = cosine_similarity([vector], [id])[0][0]
@@ -28,7 +28,7 @@ class SimpleMetaHeuristicGuy(Player):
 
         _, vector = matrix
 
-        id_vector = self.getMemoryVectorSimilar(vector, action)
+        id_vector = self.get_memory_vector_similar(vector, action)
 
         if id_vector:
             self.memory[id_vector, action] = (
@@ -51,11 +51,11 @@ class SimpleMetaHeuristicGuy(Player):
         self.max_avg = {}
         self.memory = {}
 
-    def play(self, matrix, history: dict) -> int:
-        id_vector = self.getMemoryVectorSimilar(matrix[1])
+    def play(self, game_state: GameState) -> int:
+        id_vector = self.get_memory_vector_similar(game_state.vector)
 
         if random.random() < 0.1 or not id_vector:  # Exploration
-            return Random().play(matrix, history)
+            return Random().play(game_state)
         else:  # Exploitation
             return self.max_avg[id_vector][1]
 
@@ -68,7 +68,6 @@ class GeneticGuy(Player):
         population = [self.initialize_strategy() for _ in range(20)]
 
         for generation in range(10):
-            print(generation)
             population, fitnesses = self.evolve_population(population)
 
         best_fitness = max(fitnesses)
@@ -77,7 +76,7 @@ class GeneticGuy(Player):
 
         self.strategy = best_strategy
 
-    def getOponentSimilarHistory(self, history, vector):
+    def get_oponent_similar_history(self, history, vector):
         best = None
         best_sim = None
 
@@ -98,14 +97,14 @@ class GeneticGuy(Player):
 
         return best
 
-    def play(self, matrix, history: dict) -> int:
-        shistory = self.getOponentSimilarHistory(history, matrix[1])
+    def play(self, game_state: GameState) -> int:
+        shistory = self.get_oponent_similar_history(game_state.history, game_state.vector)
 
         if shistory:
             oponent_history = shistory[-self.history_length:] if len(shistory) >= self.history_length else shistory
-            return self.getStrategyResponse(self.strategy, oponent_history, matrix[1])
+            return self.getStrategyResponse(self.strategy, oponent_history, game_state.vector)
 
-        return GoodGuy().play(matrix, history)
+        return GoodGuy().play(game_state)
 
     def getStrategyResponse(self, strategy, oponent_history, current_vector):
         best = None

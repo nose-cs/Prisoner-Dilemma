@@ -1,12 +1,12 @@
-from src.players import Player
+from src.players import Player, GameState
 
 
 class GoodGuy(Player):
-    def play(self, matrix, history: dict) -> int:
+    def play(self, game_state: GameState) -> int:
         max = None
         index_max = None
 
-        for i, row in enumerate(matrix[0]):
+        for i, row in enumerate(game_state.matrix):
             average = 0
 
             for actions in row:

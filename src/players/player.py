@@ -1,4 +1,16 @@
 from abc import ABC, abstractmethod
+from typing import List, Dict, Tuple
+
+Matrix = List[List[Tuple[float, float]]]
+Vector = Tuple[int, int]
+History = Dict[Vector, List[int]]
+
+
+class GameState:
+    def __init__(self, matrix, vector, history):
+        self.matrix: Matrix = matrix
+        self.vector: Vector = vector
+        self.history: History = history
 
 
 class Player(ABC):
@@ -12,5 +24,5 @@ class Player(ABC):
         self.score = 0
 
     @abstractmethod
-    def play(self, matrix, history: dict) -> int:
+    def play(self, game_state: GameState) -> int:
         pass
