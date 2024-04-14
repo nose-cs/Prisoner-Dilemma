@@ -17,7 +17,7 @@ class Player(ABC):
     def __init__(self) -> None:
         self.score = 0
 
-    def sum_score(self, matrix, action: int, score: int):
+    def sum_score(self, matrix, mine_action: int, other_action: int, score: int):
         self.score += score
 
     def clear(self):
