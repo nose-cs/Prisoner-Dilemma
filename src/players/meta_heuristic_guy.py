@@ -23,8 +23,8 @@ class SimpleMetaHeuristicGuy(Player):
 
         return None
 
-    def sum_score(self, matrix, mine_action: int, other_action: int, score: int):
-        super().sum_score(matrix, mine_action, score)
+    def sum_score(self, matrix, mine_action: int, other_action: int, oponent_history, score: int):
+        super().sum_score(matrix, mine_action, other_action, oponent_history, score)
 
         _, vector = matrix
 

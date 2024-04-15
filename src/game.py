@@ -45,8 +45,8 @@ class Tournament:
             action1, action2, scores = self._play_round((matrix, vector), player1, player2, history1, history2)
             score1, score2 = scores
 
-            player1.sum_score((matrix, vector), action1, action2, score1)
-            player2.sum_score((matrix, vector), action2, action1, score2)
+            player1.sum_score((matrix, vector), action1, action2, history2, score1)
+            player2.sum_score((matrix, vector), action2, action1, history1, score2)
 
             history1.setdefault(vector, []).append(action1)
             history2.setdefault(vector, []).append(action2)
@@ -56,8 +56,8 @@ class Tournament:
 
     @staticmethod
     def _play_round(matrix_vector, player1: Player, player2: Player, history1, history2):
-        game_state_1 = GameState(matrix_vector[0], matrix_vector[1], history1)
-        game_state_2 = GameState(matrix_vector[0], matrix_vector[1], history2)
+        game_state_1 = GameState(matrix_vector[0], matrix_vector[1], history2)
+        game_state_2 = GameState(matrix_vector[0], matrix_vector[1], history1)
         action1 = player1.play(game_state_1)
         action2 = player2.play(game_state_2)
         matrix, vector = matrix_vector
