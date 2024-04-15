@@ -23,28 +23,28 @@ class SimpleMetaHeuristicGuy(Player):
 
         return None
 
-    def sum_score(self, matrix, action: int, score: int):
-        super().sum_score(matrix, action, score)
+    def sum_score(self, matrix, mine_action: int, other_action: int, oponent_history, score: int):
+        super().sum_score(matrix, mine_action, other_action, oponent_history, score)
 
         _, vector = matrix
 
-        id_vector = self.get_memory_vector_similar(vector, action)
+        id_vector = self.get_memory_vector_similar(vector, mine_action)
 
         if id_vector:
-            self.memory[id_vector, action] = (
-                self.memory[id_vector, action][0] + score, self.memory[id_vector, action][1] + 1)
+            self.memory[id_vector, mine_action] = (
+                self.memory[id_vector, mine_action][0] + score, self.memory[id_vector, mine_action][1] + 1)
         else:
-            self.memory[vector, action] = (score, 1)
+            self.memory[vector, mine_action] = (score, 1)
             id_vector = vector
 
-        sum, count = self.memory[id_vector, action]
+        sum, count = self.memory[id_vector, mine_action]
         avg = sum / count
 
         if id_vector in self.max_avg:
             if self.max_avg[id_vector][0] < avg:
-                self.max_avg[id_vector] = (avg, action)
+                self.max_avg[id_vector] = (avg, mine_action)
         else:
-            self.max_avg[id_vector] = (avg, action)
+            self.max_avg[id_vector] = (avg, mine_action)
 
     def clear(self):
         super().clear()

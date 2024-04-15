@@ -12,7 +12,7 @@ def print_matrices(matrices):
 
 
 def prisoner_dilemma_score(score, rounds):
-    return score - 5 * rounds
+    return score #- 5 * rounds
 
 
 def print_tournament_results(tournament: Tournament, index: int):
