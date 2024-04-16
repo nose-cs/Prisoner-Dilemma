@@ -40,24 +40,29 @@ class Tournament:
         """Play a match between two players."""
         history1 = self.history.get(history_key, {})
         history2 = self.history.get((history_key[1], history_key[0]), {})
+        plays = []
+        last_matrix = None
 
-        for matrix, vector in self.matrices:
-            action1, action2, scores = self._play_round((matrix, vector), player1, player2, history1, history2)
+        for matrix, vector, t_matrix, t_vector in self.matrices:
+            action1, action2, scores = self._play_round((matrix, vector), player1, player2, history1, history2, plays, last_matrix)
             score1, score2 = scores
+            plays.append((action1, action2))
 
             player1.sum_score((matrix, vector), action1, action2, history2, score1)
-            player2.sum_score((matrix, vector), action2, action1, history1, score2)
+            player2.sum_score((t_matrix, t_vector), action2, action1, history1, score2)
 
+            last_matrix = (matrix , t_matrix)
+            
             history1.setdefault(vector, []).append(action1)
-            history2.setdefault(vector, []).append(action2)
+            history2.setdefault(t_vector, []).append(action2)
 
         self.history[history_key] = history1
         self.history[(history_key[1], history_key[0])] = history2
 
     @staticmethod
-    def _play_round(matrix_vector, player1: Player, player2: Player, history1, history2):
-        game_state_1 = GameState(matrix_vector[0], matrix_vector[1], history2)
-        game_state_2 = GameState(matrix_vector[0], matrix_vector[1], history1)
+    def _play_round(matrix_vector, player1: Player, player2: Player, history1, history2, plays, last_matrix):
+        game_state_1 = GameState(matrix_vector[0], matrix_vector[1], history2, plays, last_matrix)
+        game_state_2 = GameState(matrix_vector[0], matrix_vector[1], history1, plays, last_matrix)
         action1 = player1.play(game_state_1)
         action2 = player2.play(game_state_2)
         matrix, vector = matrix_vector
@@ -77,3 +82,6 @@ class Tournament:
 
     def get_loser(self):
         return min(self.players, key=lambda x: x.score)
+    
+    def traspose(matriz):
+        return [list(fila) for fila in zip(*matriz)]
