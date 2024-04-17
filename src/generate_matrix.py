@@ -69,13 +69,12 @@ def get_matrices(titles: List[str]) -> (Matrix, Vector, Matrix, Vector):
         decision_matrix = decision_matrices[title]
         matrix1 = decision_matrix.matrix
         vector1 = vectorize(matrix1)
-        matrix2 = transpose(matrix1) if not is_symmetric(matrix1) else matrix1
+        matrix2 = matrix1 if is_symmetric(matrix1) else transpose(matrix1)
         vector2 = vectorize(matrix2)
         yield matrix1, vector1, matrix2, vector2
 
 
-def get_random_matrices() -> (Matrix, Vector, Matrix, Vector):
-    count = 10
+def get_random_matrices(count: int = 10) -> (Matrix, Vector, Matrix, Vector):
     decision_titles = list(decision_matrices.keys())
     random.shuffle(decision_titles)
     return get_matrices(decision_titles[:count])
