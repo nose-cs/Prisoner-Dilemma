@@ -1,8 +1,9 @@
 import json
 from typing import List, Tuple
 
-decision_matrices_json = json.load(open('src/data.json', 'r'))
+decision_matrices_json = json.load(open('data.json', 'r'))
 
+Matrix = List[List[Tuple[float, float]]]
 
 class DecisionMatrix:
     def __init__(self, title, matrix, actions, story):
@@ -11,7 +12,7 @@ class DecisionMatrix:
         self.actions = actions
         self.story = story
 
-    def fix_matrix(self, matrix: List[List[List[int]]]) -> List[List[Tuple[int]]]:
+    def fix_matrix(self, matrix: List[List[List[int]]]) -> Matrix:
         normalized_matrix = self.normalize_matrix_data(matrix)
         return [[tuple(cell) for cell in row] for row in normalized_matrix]
 
@@ -27,7 +28,7 @@ class DecisionMatrix:
         return f"Title: {self.title}\nMatrix: {self.matrix}\nActions: {self.actions}\nStory: {self.story}"
 
 
-decision_matrices = []
+decision_matrices = {}
 for matrix_data in decision_matrices_json:
     matrix = DecisionMatrix(matrix_data["title"], matrix_data["matrix"], matrix_data["actions"], matrix_data["story"])
-    decision_matrices.append(matrix)
+    decision_matrices[matrix_data["title"]] = matrix

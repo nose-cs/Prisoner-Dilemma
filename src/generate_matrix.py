@@ -1,3 +1,11 @@
+from typing import List, Tuple
+
+from deserialization import decision_matrices
+
+Matrix = List[List[Tuple[float, float]]]
+Vector = Tuple[int, int]
+
+
 def get_matrix_len(len_vector):
     return (2 + (4 + 8 * len_vector) ** 0.5) / 4
 
@@ -28,25 +36,43 @@ def vectorize(matrix):
                     vector.append(1)
     return tuple(vector)
 
-def generate_matrix():
-    return prisoner_dilemma_matrix()
+
+def transpose(matrix: Matrix) -> Matrix:
+    num_rows = len(matrix)
+    num_cols = len(matrix[0])
+
+    transposed: Matrix = [[(0, 0) for _ in range(num_rows)] for _ in range(num_cols)]
+
+    for i in range(num_rows):
+        for j in range(num_cols):
+            transposed[j][i] = matrix[i][j]
+
+    return transposed
 
 
-def prisoner_dilemma_matrix():
-    # We are going to sum a constant to all the values in the matrix to avoid negative values
-    # Original matrix is [[(-3, -3), (0, -5)], [(-5, 0), (-1, -1)]]
-    matrix = [[(2, 2), (5, 0)], [(0, 5), (4, 4)]]
-    fixed_matrix = tuple(tuple(row) for row in matrix)
-    return fixed_matrix, vectorize(fixed_matrix)
+def is_symmetric(matrix: Matrix) -> bool:
+    num_rows = len(matrix)
+    num_cols = len(matrix[0])
+
+    for i in range(num_rows):
+        for j in range(num_cols):
+            first, second = matrix[j][i]
+            if (second, first) != matrix[i][j]:
+                return False
+
+    return True
 
 
-def battle_of_sexes_matrix():
-    matrix = [[(2, 1), (0, 0)], [(0, 0), (1, 2)]]
-    fixed_matrix = tuple(tuple(row) for row in matrix)
-    return fixed_matrix, vectorize(fixed_matrix)
+def generate_matrices(titles: List[str]) -> (Matrix, Vector, Matrix, Vector):
+    for title in titles:
+        decision_matrix = decision_matrices[title]
+        matrix1 = decision_matrix.matrix
+        vector1 = vectorize(matrix1)
+        matrix2 = transpose(matrix1) if not is_symmetric(matrix1) else matrix1
+        vector2 = vectorize(matrix2)
+        yield matrix1, vector1, matrix2, vector2
 
 
-def free_money_matrix():
-    matrix = [[(10, 10), (0, 0)], [(0, 0), (0, 0)]]
-    fixed_matrix = tuple(tuple(row) for row in matrix)
-    return fixed_matrix, vectorize(fixed_matrix)
+x = generate_matrices(['Cuento sobre decisiones en un concurso de cocina'])
+for y in x:
+    print(y)

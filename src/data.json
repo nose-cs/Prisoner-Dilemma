@@ -18,7 +18,7 @@
     "story": "Dos personas se enfrentan a la elección de tomar o rechazar una cantidad de dinero gratis. Si ambos toman el dinero, ambos obtienen una suma. Si uno lo toma y el otro no, el que lo toma obtiene la suma total, mientras que el otro no recibe nada. Si ambos rechazan, no obtienen ninguna recompensa adicional."
   },
   {
-    "title": "Cuento sobre decisiones en un concurso de cocina",
+    "title": "Concurso de cocina",
     "matrix": [[[4,4], [0,5]], [[5,0], [1,1]]],
     "actions": ["Cooperar", "Traicionar"],
     "story": "En un concurso de cocina, dos chefs deben decidir si cooperan compartiendo ingredientes o si traicionan intentando sabotear al otro. Si ambos cooperan, ambos hacen un plato excelente y comparten el primer premio. Si uno traiciona mientras el otro coopera, el traidor gana el concurso usando los mejores ingredientes, mientras que el otro fracasa. Si ambos traicionan, ambos preparan platos mediocres y no ganan nada significativo."
