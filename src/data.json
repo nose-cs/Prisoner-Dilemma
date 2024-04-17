@@ -6,16 +6,31 @@
     "story": "Dos prisioneros enfrentan la elección de cooperar con el otro manteniendo el silencio o traicionar confesando el crimen. Si ambos cooperan, reciben una sentencia reducida. Si uno traiciona mientras el otro coopera, el traidor queda en libertad mientras que el cooperador recibe una sentencia más dura. Si ambos traicionan, ambos reciben sentencias moderadas."
   },
   {
-    "title": "Batalla de los sexos",
-    "matrix": [[[2,1], [0,0]], [[0,0], [1,2]]],
-    "actions": ["Cine", "Fútbol"],
-    "story": "Una pareja debe decidir entre ir al cine o a un partido de fútbol. Si van a actividades diferentes, obtienen un beneficio menor que si van juntos a su actividad preferida. Si no logran ponerse de acuerdo, el resultado es menos satisfactorio para ambos."
+    "title": "El dilema de los cazadores",
+    "matrix": [
+      [[3, 3], [0, 2]],
+      [[2, 0], [1, 1]]
+    ],
+    "actions": ["Equipaje para ciervos", "Equipaje para liebres"],
+    "story": "En una aldea hay dos cazadores con equipaje para cazar ciervos y liebres. Cazar un ciervo requiere ambos equipajes, mientras que cazar una liebre puede ser hecho por uno solo. Si ambos cazan liebres, cada uno obtiene una. Si solo uno caza liebres, obtiene ambas. Cazar un ciervo es beneficioso si ambos cazadores llevan el equipaje necesario."
   },
   {
-    "title": "Dinero gratuito",
-    "matrix": [[[10,10], [0,0]], [[0,0], [0,0]]],
-    "actions": ["Tomar", "Rechazar"],
-    "story": "Dos personas se enfrentan a la elección de tomar o rechazar una cantidad de dinero gratis. Si ambos toman el dinero, ambos obtienen una suma. Si uno lo toma y el otro no, el que lo toma obtiene la suma total, mientras que el otro no recibe nada. Si ambos rechazan, no obtienen ninguna recompensa adicional."
+    "title": "La guerra de los sexos",
+    "matrix": [
+      [[2, 1], [0, 0]],
+      [[0, 0], [1, 2]]
+    ],
+    "actions": ["Ballet", "Boxeo"],
+    "story": "Una pareja enfrenta el dilema de elegir entre ir al ballet o ver boxeo. Si van a lugares diferentes, ambos se sienten decepcionados. Si van juntos a su actividad preferida, ambos están satisfechos. Si no logran ponerse de acuerdo, el resultado es menos satisfactorio para ambos."
+  },
+  {
+    "title": "Dinero Gratis",
+    "matrix": [
+      [[10, 10], [0, 0]],
+      [[0, 0], [0, 0]]
+    ],
+    "actions": ["Sí", "No"],
+    "story": "Dos personas encuentran un botón para obtener dinero gratis. Si ambos presionan el botón, reciben una cantidad de dinero cada uno. Si uno presiona y el otro no, ninguno recibe nada."
   },
   {
     "title": "Concurso de cocina",
