@@ -28,3 +28,22 @@ class AdaptiveEyeForEye(Player):
                 count[play] += 1
 
         return sorted(count.items(), key=lambda pc: pc[1])[0][0]
+
+class FuzzyEyeForEye(Player):
+    def __init__(self, fuzzy_metric) -> None:
+        super().__init__()
+        self.metric = fuzzy_metric
+
+    def play(self, game_state: GameState) -> int:
+        if game_state.vector not in game_state.history:
+            return GoodGuy().play(game_state)
+        fuzzy_value = self.metric(game_state.previousMatrix[1], game_state.plays[-1][1])
+        min_diff = 1000000000
+        ret = -1
+        for i in range(len(game_state.matrix)):
+            cand = self.metric(game_state.matrix, i)
+            if(abs(fuzzy_value - cand) < min_diff):
+                min_diff = fuzzy_value - cand
+                ret = i
+        return ret
+        
