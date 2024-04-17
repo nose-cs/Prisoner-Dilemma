@@ -1,5 +1,5 @@
 from src.game import Tournament
-from src.generate_matrix import generate_matrices
+from src.generate_matrix import get_random_matrices
 from src.players import BadGuy, EyeForEye, AdaptiveEyeForEye, GoodGuy
 
 
@@ -36,7 +36,7 @@ players = [
     AdaptiveEyeForEye()
 ]
 
-matrices = [element for element in generate_matrices(['Dilema del prisionero']) for _ in range(1000)]
+matrices = [element for element in get_random_matrices() for _ in range(1000)]
 
 tournament = Tournament(players, matrices)
 

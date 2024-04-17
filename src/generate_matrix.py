@@ -1,3 +1,4 @@
+import random
 from typing import List, Tuple
 
 from src.deserialization import decision_matrices
@@ -63,7 +64,7 @@ def is_symmetric(matrix: Matrix) -> bool:
     return True
 
 
-def generate_matrices(titles: List[str]) -> (Matrix, Vector, Matrix, Vector):
+def get_matrices(titles: List[str]) -> (Matrix, Vector, Matrix, Vector):
     for title in titles:
         decision_matrix = decision_matrices[title]
         matrix1 = decision_matrix.matrix
@@ -71,3 +72,10 @@ def generate_matrices(titles: List[str]) -> (Matrix, Vector, Matrix, Vector):
         matrix2 = transpose(matrix1) if not is_symmetric(matrix1) else matrix1
         vector2 = vectorize(matrix2)
         yield matrix1, vector1, matrix2, vector2
+
+
+def get_random_matrices() -> (Matrix, Vector, Matrix, Vector):
+    count = 10
+    decision_titles = list(decision_matrices.keys())
+    random.shuffle(decision_titles)
+    return get_matrices(decision_titles[:count])
