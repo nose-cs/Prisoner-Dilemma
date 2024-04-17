@@ -28,6 +28,9 @@ def vectorize(matrix):
                     vector.append(1)
     return tuple(vector)
 
+def traspose(matriz):
+    return [list(row) for row in zip(*matriz)]
+
 def generate_matrix():
     return prisoner_dilemma_matrix()
 
@@ -37,16 +40,23 @@ def prisoner_dilemma_matrix():
     # Original matrix is [[(-3, -3), (0, -5)], [(-5, 0), (-1, -1)]]
     matrix = [[(2, 2), (5, 0)], [(0, 5), (4, 4)]]
     fixed_matrix = tuple(tuple(row) for row in matrix)
-    return fixed_matrix, vectorize(fixed_matrix)
+    traspose_matrix = traspose(matrix)
+    fixed_traspose_matrix = tuple(tuple(row) for row in traspose_matrix)
+
+    return fixed_matrix, vectorize(fixed_matrix), fixed_traspose_matrix, vectorize(fixed_traspose_matrix)
 
 
 def battle_of_sexes_matrix():
     matrix = [[(2, 1), (0, 0)], [(0, 0), (1, 2)]]
     fixed_matrix = tuple(tuple(row) for row in matrix)
-    return fixed_matrix, vectorize(fixed_matrix)
+    traspose_matrix = traspose(matrix)
+    fixed_traspose_matrix = tuple(tuple(row) for row in traspose_matrix)
+    return fixed_matrix, vectorize(fixed_matrix), fixed_traspose_matrix, vectorize(fixed_traspose_matrix)
 
 
 def free_money_matrix():
     matrix = [[(10, 10), (0, 0)], [(0, 0), (0, 0)]]
-    fixed_matrix = tuple(tuple(row) for row in matrix)
-    return fixed_matrix, vectorize(fixed_matrix)
+    fixed_matrix = tuple(tuple(row) for row in matrix) 
+    traspose_matrix = traspose(matrix)
+    fixed_traspose_matrix = tuple(tuple(row) for row in traspose_matrix)
+    return fixed_matrix, vectorize(fixed_matrix), fixed_traspose_matrix, vectorize(fixed_traspose_matrix)
