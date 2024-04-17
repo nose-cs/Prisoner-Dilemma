@@ -12,7 +12,7 @@
       [[2, 0], [1, 1]]
     ],
     "actions": ["Llevar equipaje para ciervos", "Llevar equipaje para liebres"],
-    "story": "En una aldea hay dos cazadores con equipaje para cazar ciervos y liebres. Salen a cazar. Si ambos llevan equipajes para liebres, cada uno caza una liebre. Si solo uno lleva equipaje para liebres, este caza dos liebres, mientras el otro que optó por equipaje para ciervos no obtiene nada. Pueden cazar un ciervo solo si ambos llevan equipajes para ciervo, lo que resulta más beneficioso para ambos cazadores."
+    "story": "En una aldea hay dos cazadores que van a cazar, pueden llevar solo uno, equipaje para cazar ciervos o equipaje para cazar liebres. Si ambos llevan equipajes para liebres, regresan con exactamente una liebre cada uno. Si uno lleva equipaje para cazar liebres y el otro equipaje cazar para ciervos, entonces el que lleva el equipaje para liebres regresa con dos liebres, mientras el que lleva equipaje para ciervos no obtiene nada. Si ambos llevan equipaje para cazar ciervos, siempre ambos regresan con un ciervo compartido, lo que resulta más beneficioso para ambos."
   },
   {
     "title": "La guerra de los sexos",
