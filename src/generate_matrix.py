@@ -4,7 +4,15 @@ from typing import List, Tuple
 from src.deserialization import decision_matrices
 
 Matrix = List[List[Tuple[float, float]]]
-Vector = Tuple[int, int]
+
+
+class MatrixStructure:
+    def __init__(self, matrix1, vector1, matrix2, vector2, matrix_title: str):
+        self.matrix1 = matrix1
+        self.vector1 = vector1
+        self.matrix2 = matrix2
+        self.vector2 = vector2
+        self.matrix_title = matrix_title
 
 
 def get_matrix_len(len_vector):
@@ -64,17 +72,17 @@ def is_symmetric(matrix: Matrix) -> bool:
     return True
 
 
-def get_matrices(titles: List[str]) -> (Matrix, Vector, Matrix, Vector):
+def get_matrices(titles: List[str]) -> MatrixStructure:
     for title in titles:
         decision_matrix = decision_matrices[title]
-        matrix1 = decision_matrix.matrix
+        matrix1: Matrix = decision_matrix.matrix
         vector1 = vectorize(matrix1)
-        matrix2 = matrix1 if is_symmetric(matrix1) else transpose(matrix1)
+        matrix2: Matrix = matrix1 if is_symmetric(matrix1) else transpose(matrix1)
         vector2 = vectorize(matrix2)
-        yield matrix1, vector1, matrix2, vector2
+        yield MatrixStructure(matrix1, vector1, matrix2, vector2, title)
 
 
-def get_random_matrices(count: int = 10) -> (Matrix, Vector, Matrix, Vector):
+def get_random_matrices(count: int = 10) -> MatrixStructure:
     decision_titles = list(decision_matrices.keys())
     random.shuffle(decision_titles)
     return get_matrices(decision_titles[:count])

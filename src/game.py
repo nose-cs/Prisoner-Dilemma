@@ -1,7 +1,9 @@
 from typing import List, Dict, Tuple
 
+from src.generate_matrix import MatrixStructure
 from src.players import Player
 from src.players.player import GameState
+from src.storyteller import StoryTeller
 
 Matrix = List[List[Tuple[float, float]]]
 Vector = Tuple[int, int]
@@ -25,10 +27,11 @@ class Tournament:
     - history (Dict[Tuple[int, int], Dict[Vector, List[int]]]): History of previous actions.
     """
 
-    def __init__(self, players: List[Player], matrices: List[Tuple[Matrix, Vector, Matrix, Vector]]):
+    def __init__(self, players: List[Player], matrices: List[MatrixStructure], tell_story=False):
         self.players = players
         self.matrices = matrices
         self.history: Dict[Tuple[int, int], History] = {}
+        self.storyteller = StoryTeller() if tell_story else None
 
     def play(self):
         """Play the tournament."""
@@ -48,11 +51,12 @@ class Tournament:
         history1 = self.history.get(history_key, {})
         history2 = self.history.get((history_key[1], history_key[0]), {})
 
-        for matrix1, vector1, matrix2, vector2 in self.matrices:
-            action1, action2, scores = self._play_round((matrix1, vector1, matrix2, vector2), player1, player2,
+        for matrix_structure in self.matrices:
+            action1, action2, scores = self._play_round(matrix_structure, player1, player2,
                                                         history1, history2)
             score1, score2 = scores
 
+            matrix1, vector1, matrix2, vector2 = matrix_structure.matrix1, matrix_structure.vector1, matrix_structure.matrix2, matrix_structure.vector2
             player1.sum_score((matrix1, vector1), action1, action2, history2, score1)
             player2.sum_score((matrix2, vector2), action2, action1, history1, score2)
 
@@ -62,13 +66,17 @@ class Tournament:
         self.history[history_key] = history1
         self.history[(history_key[1], history_key[0])] = history2
 
-    @staticmethod
-    def _play_round(matrix_vector, player1: Player, player2: Player, history1, history2):
-        matrix1, vector1, matrix2, vector2 = matrix_vector
+    def _play_round(self, matrix_structure, player1: Player, player2: Player, history1, history2):
+        matrix1, vector1, matrix2, vector2 = matrix_structure.matrix1, matrix_structure.vector1, matrix_structure.matrix2, matrix_structure.vector2
         game_state_1 = GameState(matrix1, vector1, history2)
         game_state_2 = GameState(matrix2, vector2, history1)
         action1 = player1.play(game_state_1)
         action2 = player2.play(game_state_2)
+
+        # if self.storyteller:
+        #     story = self.storyteller.tell_round_story(matrix_structure.matrix_title, player1, player2, action1, action2)
+        #     print(story)
+
         return action1, action2, matrix1[action1][action2]
 
     def _clear(self):

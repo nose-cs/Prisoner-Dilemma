@@ -1,6 +1,7 @@
 from src.game import Tournament
 from src.generate_matrix import get_random_matrices
-from src.players import BadGuy, EyeForEye, AdaptiveEyeForEye, GoodGuy
+from src.generate_players import assign_names
+from src.players import BadGuy, AdaptiveEyeForEye
 
 
 def print_tournament_results(tournament: Tournament, index: int):
@@ -27,18 +28,20 @@ players = [
     # GoodGuy(),
     # SimpleMetaHeuristicGuy(),
     BadGuy(),
-    GoodGuy(),
-    GoodGuy(),
-    EyeForEye(),
-    EyeForEye(),
-    EyeForEye(),
-    AdaptiveEyeForEye(),
+    # GoodGuy(),
+    # GoodGuy(),
+    # EyeForEye(),
+    # EyeForEye(),
+    # EyeForEye(),
+    # AdaptiveEyeForEye(),
     AdaptiveEyeForEye()
 ]
 
-matrices = [element for element in get_random_matrices() for _ in range(1000)]
+players = assign_names(players)
 
-tournament = Tournament(players, matrices)
+matrices = [element for element in get_random_matrices(1)]
+
+tournament = Tournament(players, matrices, tell_story=True)
 
 for i in range(1):
     tournament.play()
