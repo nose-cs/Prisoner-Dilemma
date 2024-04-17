@@ -11,8 +11,8 @@
       [[3, 3], [0, 2]],
       [[2, 0], [1, 1]]
     ],
-    "actions": ["Equipaje para ciervos", "Equipaje para liebres"],
-    "story": "En una aldea hay dos cazadores con equipaje para cazar ciervos y liebres. Cazar un ciervo requiere ambos equipajes, mientras que cazar una liebre puede ser hecho por uno solo. Si ambos cazan liebres, cada uno obtiene una. Si solo uno caza liebres, obtiene ambas. Cazar un ciervo es beneficioso si ambos cazadores llevan el equipaje necesario."
+    "actions": ["Llevar equipaje para ciervos", "Llevar equipaje para liebres"],
+    "story": "En una aldea hay dos cazadores con equipaje para cazar ciervos y liebres. Salen a cazar. Si ambos llevan equipajes para liebres, cada uno caza una liebre. Si solo uno lleva equipaje para liebres, este caza dos liebres, mientras el otro que optó por equipaje para ciervos no obtiene nada. Pueden cazar un ciervo solo si ambos llevan equipajes para ciervo, lo que resulta más beneficioso para ambos cazadores."
   },
   {
     "title": "La guerra de los sexos",
@@ -20,7 +20,7 @@
       [[2, 1], [0, 0]],
       [[0, 0], [1, 2]]
     ],
-    "actions": ["Ballet", "Boxeo"],
+    "actions": ["Ir al ballet", "Ir al boxeo"],
     "story": "Una pareja enfrenta el dilema de elegir entre ir al ballet o ver boxeo. Si van a lugares diferentes, ambos se sienten decepcionados. Si van juntos a su actividad preferida, ambos están satisfechos. Si no logran ponerse de acuerdo, el resultado es menos satisfactorio para ambos."
   },
   {
