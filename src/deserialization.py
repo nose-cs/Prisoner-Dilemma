@@ -1,7 +1,7 @@
 import json
 from typing import List, Tuple
 
-decision_matrices_json = json.load(open('data.json', 'r'))
+decision_matrices_json = json.load(open('src/data.json', 'r'))
 
 Matrix = List[List[Tuple[float, float]]]
 

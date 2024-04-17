@@ -8,6 +8,13 @@ Vector = Tuple[int, int]
 History = Dict[Vector, List[int]]
 
 
+# ambiente
+# inaccesible porque no se conoce completamente el estado
+# no determinista pues el proximo estado no depende solo de la acción actual, sino además de la acción del oponente
+# no es episódico
+# estático porque no cambia en el tiempo a menos que el agente realice una acción sobre él
+# discreto
+
 class Tournament:
     """
     A class to represent a Tournament.
@@ -18,7 +25,7 @@ class Tournament:
     - history (Dict[Tuple[int, int], Dict[Vector, List[int]]]): History of previous actions.
     """
 
-    def __init__(self, players: List[Player], matrices: List[Tuple[Matrix, Vector]]):
+    def __init__(self, players: List[Player], matrices: List[Tuple[Matrix, Vector, Matrix, Vector]]):
         self.players = players
         self.matrices = matrices
         self.history: Dict[Tuple[int, int], History] = {}
@@ -41,27 +48,28 @@ class Tournament:
         history1 = self.history.get(history_key, {})
         history2 = self.history.get((history_key[1], history_key[0]), {})
 
-        for matrix, vector in self.matrices:
-            action1, action2, scores = self._play_round((matrix, vector), player1, player2, history1, history2)
+        for matrix1, vector1, matrix2, vector2 in self.matrices:
+            action1, action2, scores = self._play_round((matrix1, vector1, matrix2, vector2), player1, player2,
+                                                        history1, history2)
             score1, score2 = scores
 
-            player1.sum_score((matrix, vector), action1, action2, history2, score1)
-            player2.sum_score((matrix, vector), action2, action1, history1, score2)
+            player1.sum_score((matrix1, vector1), action1, action2, history2, score1)
+            player2.sum_score((matrix2, vector2), action2, action1, history1, score2)
 
-            history1.setdefault(vector, []).append(action1)
-            history2.setdefault(vector, []).append(action2)
+            history1.setdefault(vector1, []).append(action1)
+            history2.setdefault(vector2, []).append(action2)
 
         self.history[history_key] = history1
         self.history[(history_key[1], history_key[0])] = history2
 
     @staticmethod
     def _play_round(matrix_vector, player1: Player, player2: Player, history1, history2):
-        game_state_1 = GameState(matrix_vector[0], matrix_vector[1], history2)
-        game_state_2 = GameState(matrix_vector[0], matrix_vector[1], history1)
+        matrix1, vector1, matrix2, vector2 = matrix_vector
+        game_state_1 = GameState(matrix1, vector1, history2)
+        game_state_2 = GameState(matrix2, vector2, history1)
         action1 = player1.play(game_state_1)
         action2 = player2.play(game_state_2)
-        matrix, vector = matrix_vector
-        return action1, action2, matrix[action1][action2]
+        return action1, action2, matrix1[action1][action2]
 
     def _clear(self):
         """Clear the scores and history for all players."""

@@ -1,6 +1,6 @@
 from typing import List, Tuple
 
-from deserialization import decision_matrices
+from src.deserialization import decision_matrices
 
 Matrix = List[List[Tuple[float, float]]]
 Vector = Tuple[int, int]
@@ -71,8 +71,3 @@ def generate_matrices(titles: List[str]) -> (Matrix, Vector, Matrix, Vector):
         matrix2 = transpose(matrix1) if not is_symmetric(matrix1) else matrix1
         vector2 = vectorize(matrix2)
         yield matrix1, vector1, matrix2, vector2
-
-
-x = generate_matrices(['Cuento sobre decisiones en un concurso de cocina'])
-for y in x:
-    print(y)
