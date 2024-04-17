@@ -5,10 +5,12 @@ decision_matrices_json = json.load(open('src/data.json', 'r'))
 
 Matrix = List[List[Tuple[float, float]]]
 
+
 class DecisionMatrix:
     def __init__(self, title, matrix, actions, story):
         self.title = title
         self.matrix = self.fix_matrix(matrix)
+        self.not_fixed_matrix = matrix
         self.actions = actions
         self.story = story
 
