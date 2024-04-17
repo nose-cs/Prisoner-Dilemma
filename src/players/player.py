@@ -4,14 +4,16 @@ from typing import List, Dict, Tuple
 Matrix = List[List[Tuple[float, float]]]
 Vector = Tuple[int, int]
 History = Dict[Vector, List[int]]
+Plays = List[Tuple[int, int]]
 
 
 class GameState:
-    def __init__(self, matrix, vector, history):
+    def __init__(self, matrix, vector, history, plays, previous_Matrix):
         self.matrix: Matrix = matrix
         self.vector: Vector = vector
         self.history: History = history
-
+        self.plays: Plays = plays
+        self.previousMatrix: Matrix = previous_Matrix
 
 class Player(ABC):
     def __init__(self) -> None:
