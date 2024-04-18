@@ -4,7 +4,7 @@ class FuzzyFunctions:
         cand = 0
         for tuple in matrix[row]:
             if tuple[0] == 0:  return 1
-            cand = max(cand, (tuple[1]/ tuple[0]))
+            cand = max(cand, (tuple[1] / tuple[0]))
         return min(cand, 1)
 
     @staticmethod
@@ -12,14 +12,14 @@ class FuzzyFunctions:
         max_joint = -1000000
         expected_share = -10000000
         min_dif = 10000000
-        for row in matrix:
-            for tuple in row:
+        for matrix_row in matrix:
+            for tuple in matrix_row:
                 if tuple[0] + tuple[1] > max_joint:
                     max_joint = tuple[0] + tuple[1]
                     expected_share = tuple[1]
-                    min_dif = abs((tuple[0] + tuple[1])/ 2 - tuple[0])
+                    min_dif = abs((tuple[0] + tuple[1]) / 2 - tuple[0])
                 elif tuple[0] + tuple[1] == max_joint:
-                    avg = (tuple[0] + tuple[1])/2
+                    avg = (tuple[0] + tuple[1]) / 2
                     if abs(tuple[0] - avg < min_dif):
                         min_dif = abs(tuple[0] - avg < min_dif)
                         expected_share = tuple[1]
@@ -35,17 +35,16 @@ class FuzzyFunctions:
         max_sum = 0
         max_sum_index = 0
         min_dif_in_max_sum = 100000000
-        for index, row in enumerate(matrix):
-            total_sum = sum(map(sum, row))
+        for index, matrix_row in enumerate(matrix):
+            total_sum = sum(map(sum, matrix_row))
             if total_sum > max_sum:
                 max_sum = total_sum
                 max_sum_index = index
-                min_dif_in_max_sum = abs(total_sum/2 - sum(map(lambda x: x[1], row)))
+                min_dif_in_max_sum = abs(total_sum / 2 - sum(map(lambda x: x[1], matrix_row)))
             elif total_sum == max_sum:
-                dif = abs(total_sum/2 - sum(map(lambda x: x[1], row)))
+                dif = abs(total_sum / 2 - sum(map(lambda x: x[1], matrix_row)))
                 if dif < min_dif_in_max_sum:
                     max_sum_index = index
                     min_dif_in_max_sum = dif
 
         return min(1, sum(map(lambda x: x[1], matrix[row])) / sum(map(lambda x: x[1], matrix[max_sum_index])))
-
