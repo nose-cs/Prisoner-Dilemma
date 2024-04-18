@@ -1,3 +1,20 @@
+import random
+from typing import List, Tuple
+
+from src.deserialization import decision_matrices
+
+Matrix = List[List[Tuple[float, float]]]
+
+
+class MatrixStructure:
+    def __init__(self, matrix1, vector1, matrix2, vector2, matrix_title: str):
+        self.matrix1 = matrix1
+        self.vector1 = vector1
+        self.matrix2 = matrix2
+        self.vector2 = vector2
+        self.matrix_title = matrix_title
+
+
 def get_matrix_len(len_vector):
     return (2 + (4 + 8 * len_vector) ** 0.5) / 4
 
@@ -28,35 +45,51 @@ def vectorize(matrix):
                     vector.append(1)
     return tuple(vector)
 
-def traspose(matriz):
-    return [list(row) for row in zip(*matriz)]
+
+def transpose(matrix: Matrix) -> Matrix:
+    num_rows = len(matrix)
+    num_cols = len(matrix[0])
+
+    transposed: Matrix = [[(0, 0) for _ in range(num_rows)] for _ in range(num_cols)]
+
+    for i in range(num_rows):
+        for j in range(num_cols):
+            transposed[j][i] = matrix[i][j]
+
+    return transposed
+
+
+def is_symmetric(matrix: Matrix) -> bool:
+    num_rows = len(matrix)
+    num_cols = len(matrix[0])
+
+    for i in range(num_rows):
+        for j in range(num_cols):
+            first, second = matrix[j][i]
+            if (second, first) != matrix[i][j]:
+                return False
+
+    return True
+
+
+def get_matrices(titles: List[str]) -> MatrixStructure:
+    for title in titles:
+        decision_matrix = decision_matrices[title]
+        matrix1: Matrix = decision_matrix.matrix
+        vector1 = vectorize(matrix1)
+        matrix2: Matrix = matrix1 if is_symmetric(matrix1) else transpose(matrix1)
+        vector2 = vectorize(matrix2)
+        yield MatrixStructure(matrix1, vector1, matrix2, vector2, title)
+
+
+def get_random_matrices(count: int = 10) -> MatrixStructure:
+    decision_titles = list(decision_matrices.keys())
+    random.shuffle(decision_titles)
+    return get_matrices(decision_titles[:count])
+
 
 def generate_matrix():
-    return prisoner_dilemma_matrix()
-
-
-def prisoner_dilemma_matrix():
-    # We are going to sum a constant to all the values in the matrix to avoid negative values
-    # Original matrix is [[(-3, -3), (0, -5)], [(-5, 0), (-1, -1)]]
-    matrix = [[(2, 2), (5, 0)], [(0, 5), (4, 4)]]
-    fixed_matrix = tuple(tuple(row) for row in matrix)
-    traspose_matrix = traspose(matrix)
-    fixed_traspose_matrix = tuple(tuple(row) for row in traspose_matrix)
-
-    return fixed_matrix, vectorize(fixed_matrix), fixed_traspose_matrix, vectorize(fixed_traspose_matrix)
-
-
-def battle_of_sexes_matrix():
-    matrix = [[(2, 1), (0, 0)], [(0, 0), (1, 2)]]
-    fixed_matrix = tuple(tuple(row) for row in matrix)
-    traspose_matrix = traspose(matrix)
-    fixed_traspose_matrix = tuple(tuple(row) for row in traspose_matrix)
-    return fixed_matrix, vectorize(fixed_matrix), fixed_traspose_matrix, vectorize(fixed_traspose_matrix)
-
-
-def free_money_matrix():
-    matrix = [[(10, 10), (0, 0)], [(0, 0), (0, 0)]]
-    fixed_matrix = tuple(tuple(row) for row in matrix) 
-    traspose_matrix = traspose(matrix)
-    fixed_traspose_matrix = tuple(tuple(row) for row in traspose_matrix)
-    return fixed_matrix, vectorize(fixed_matrix), fixed_traspose_matrix, vectorize(fixed_traspose_matrix)
+    decision_titles = list(decision_matrices.keys())
+    random.shuffle(decision_titles)
+    for matrix in get_matrices(decision_titles[:1]):
+        return matrix
