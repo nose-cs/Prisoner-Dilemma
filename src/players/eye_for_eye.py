@@ -1,4 +1,4 @@
-from src.players import GoodGuy, Player, GameState
+from src.players import GoodGuy, Player, GameState, BadGuy
 
 
 class EyeForEye(Player):
@@ -46,4 +46,16 @@ class FuzzyEyeForEye(Player):
                 min_diff = fuzzy_value - cand
                 ret = i
         return ret
+        
+
+class FuzzyDeterministicEyeForEye(Player):
+    def __init__(self, fuzzy_metric) -> None:
+        super().__init__()
+        self.metric = fuzzy_metric
+
+    def play(self, game_state: GameState) -> int:
+        if game_state.vector not in game_state.history:
+            return GoodGuy().play(game_state)
+        fuzzy_value = self.metric(game_state.previous_matrix[1], game_state.plays[-1][1])
+        return GoodGuy().play(GameState) if fuzzy_value > 0.7 else BadGuy().play(GameState)
         
