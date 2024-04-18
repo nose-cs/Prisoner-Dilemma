@@ -86,3 +86,10 @@ def get_random_matrices(count: int = 10) -> MatrixStructure:
     decision_titles = list(decision_matrices.keys())
     random.shuffle(decision_titles)
     return get_matrices(decision_titles[:count])
+
+
+def generate_matrix():
+    decision_titles = list(decision_matrices.keys())
+    random.shuffle(decision_titles)
+    for matrix in get_matrices(decision_titles[:1]):
+        return matrix

@@ -37,12 +37,12 @@ class FuzzyEyeForEye(Player):
     def play(self, game_state: GameState) -> int:
         if game_state.vector not in game_state.history:
             return GoodGuy().play(game_state)
-        fuzzy_value = self.metric(game_state.previousMatrix[1], game_state.plays[-1][1])
+        fuzzy_value = self.metric(game_state.previous_matrix[1], game_state.plays[-1][1])
         min_diff = 1000000000
         ret = -1
         for i in range(len(game_state.matrix)):
             cand = self.metric(game_state.matrix, i)
-            if(abs(fuzzy_value - cand) < min_diff):
+            if abs(fuzzy_value - cand) < min_diff:
                 min_diff = fuzzy_value - cand
                 ret = i
         return ret

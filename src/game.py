@@ -50,15 +50,21 @@ class Tournament:
         """Play a match between two players."""
         history1 = self.history.get(history_key, {})
         history2 = self.history.get((history_key[1], history_key[0]), {})
+        plays = []
+        last_matrix = None
 
         for matrix_structure in self.matrices:
             action1, action2, scores = self._play_round(matrix_structure, player1, player2,
-                                                        history1, history2)
+                                                        history1, history2, plays, last_matrix)
             score1, score2 = scores
+
+            plays.append((action1, action2))
 
             matrix1, vector1, matrix2, vector2 = matrix_structure.matrix1, matrix_structure.vector1, matrix_structure.matrix2, matrix_structure.vector2
             player1.sum_score((matrix1, vector1), action1, action2, history2, score1)
             player2.sum_score((matrix2, vector2), action2, action1, history1, score2)
+
+            last_matrix = (matrix1, matrix2)
 
             history1.setdefault(vector1, []).append(action1)
             history2.setdefault(vector2, []).append(action2)
@@ -66,16 +72,13 @@ class Tournament:
         self.history[history_key] = history1
         self.history[(history_key[1], history_key[0])] = history2
 
-    def _play_round(self, matrix_structure, player1: Player, player2: Player, history1, history2):
+    @staticmethod
+    def _play_round(matrix_structure, player1: Player, player2: Player, history1, history2, plays, last_matrix):
         matrix1, vector1, matrix2, vector2 = matrix_structure.matrix1, matrix_structure.vector1, matrix_structure.matrix2, matrix_structure.vector2
-        game_state_1 = GameState(matrix1, vector1, history2)
-        game_state_2 = GameState(matrix2, vector2, history1)
+        game_state_1 = GameState(matrix1, vector1, history2, plays, last_matrix)
+        game_state_2 = GameState(matrix2, vector2, history1, plays, last_matrix)
         action1 = player1.play(game_state_1)
         action2 = player2.play(game_state_2)
-
-        # if self.storyteller:
-        #     story = self.storyteller.tell_round_story(matrix_structure.matrix_title, player1, player2, action1, action2)
-        #     print(story)
 
         return action1, action2, matrix1[action1][action2]
 

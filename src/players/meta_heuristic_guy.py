@@ -148,13 +148,14 @@ class GeneticGuy(Player):
     def fitness(self, strategy, simulations=10):
         total_gain = 0
         for _ in range(simulations):
-            gain_matrix, vector_matrix = generate_matrix()
+            matrix_structure = generate_matrix()
+            matrix1, matrix2, vector1 = matrix_structure.matrix1, matrix_structure.matrix2, matrix_structure.vector1
 
-            opponent_history = np.random.choice(range(0, len(gain_matrix)), size=self.history_length)
-            player_move = self.getStrategyResponse(strategy, opponent_history, vector_matrix)
-            opponent_move = np.random.randint(0, len(gain_matrix))
+            opponent_history = np.random.choice(range(0, len(matrix2)), size=self.history_length)
+            player_move = self.getStrategyResponse(strategy, opponent_history, vector1)
+            opponent_move = np.random.randint(0, len(matrix2))
 
-            total_gain += gain_matrix[player_move][opponent_move][0]
+            total_gain += matrix1[player_move][opponent_move][0]
 
         return total_gain / simulations
 

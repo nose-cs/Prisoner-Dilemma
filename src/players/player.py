@@ -8,12 +8,12 @@ Plays = List[Tuple[int, int]]
 
 
 class GameState:
-    def __init__(self, matrix, vector, history):
+    def __init__(self, matrix, vector, history, plays, previous_matrix):
         self.matrix: Matrix = matrix
         self.vector: Vector = vector
         self.history: History = history
-        # self.plays: Plays = matches_actions
-        # self.previousMatrix: Matrix = previous_Matrix
+        self.plays: Plays = plays
+        self.previous_matrix: Matrix = previous_matrix
 
 
 class Player(ABC):
