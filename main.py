@@ -1,7 +1,7 @@
 from src.game import Tournament
-from src.generate_matrix import get_random_matrices
+from src.generate_matrix import get_matrices
 from src.generate_players import assign_names
-from src.players import BadGuy, AdaptiveEyeForEye, GoodGuy, EyeForEye, Random, SimpleMetaHeuristicGuy, GeneticGuy
+from src.players import BadGuy, FuzzyEyeForEye, metrics, Random, EyeForEye
 
 
 def print_tournament_results(tournament: Tournament, index: int):
@@ -24,23 +24,32 @@ def print_tournament_results(tournament: Tournament, index: int):
 
 
 players = [
-    GeneticGuy(),
     Random(),
-    GoodGuy(),
-    SimpleMetaHeuristicGuy(),
+    Random(),
+    Random(),
+    Random(),
+    EyeForEye(),
+    EyeForEye(),
+    EyeForEye(),
+    EyeForEye(),
     BadGuy(),
-    GoodGuy(),
-    GoodGuy(),
-    EyeForEye(),
-    EyeForEye(),
-    EyeForEye(),
-    AdaptiveEyeForEye(),
-    AdaptiveEyeForEye()
+    BadGuy(),
+    FuzzyEyeForEye(metrics.FuzzyFunctions.envy),
+    FuzzyEyeForEye(metrics.FuzzyFunctions.sub_joint),
+    FuzzyEyeForEye(metrics.FuzzyFunctions.dif_sum_rows)
 ]
 
 players = assign_names(players)
 
-matrices = [element for element in get_random_matrices(5)]
+matrices = [element for element in get_matrices(
+    ["Dilema del prisionero", "Dilema del prisionero", "Dilema del prisionero", "Dilema del prisionero",
+     "Dilema del prisionero", "Dilema del prisionero", "Dilema del prisionero", "Dilema del prisionero",
+     "Dilema del prisionero", "Dilema del prisionero", "Dilema del prisionero", "Dilema del prisionero",
+     "Dilema del prisionero", "Dilema del prisionero", "Dilema del prisionero", "Dilema del prisionero",
+     "Dilema del prisionero", "Dilema del prisionero", "Dilema del prisionero", "Dilema del prisionero",
+     "Dilema del prisionero", "Dilema del prisionero", "Dilema del prisionero", "Dilema del prisionero",
+     "Dilema del prisionero", "Dilema del prisionero", "Dilema del prisionero", "Dilema del prisionero",
+     "Dilema del prisionero", "Dilema del prisionero", "Dilema del prisionero", "Dilema del prisionero", ])]
 
 tournament = Tournament(players, matrices, tell_story=True)
 

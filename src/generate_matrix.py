@@ -73,17 +73,17 @@ def is_symmetric(matrix: Matrix) -> bool:
     return True
 
 
-def get_matrices(titles: List[str]) -> MatrixStructure:
+def get_matrices(titles: List[str]) -> List[MatrixStructure]:
     for title in titles:
         decision_matrix = decision_matrices[title]
         matrix1: Matrix = decision_matrix.matrix
         vector1 = vectorize(matrix1)
         matrix2: Matrix = matrix1 if is_symmetric(matrix1) else transpose(matrix1)
-        vector2 = vectorize(matrix2)
+        vector2 = vector1 if is_symmetric(matrix1) else vectorize(matrix2)
         yield MatrixStructure(matrix1, vector1, matrix2, vector2, title)
 
 
-def get_random_matrices(count: int = 10) -> MatrixStructure:
+def get_random_matrices(count: int = 10) -> List[MatrixStructure]:
     decision_titles = list(decision_matrices.keys())
     random.shuffle(decision_titles)
     return get_matrices(decision_titles[:count])
