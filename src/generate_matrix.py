@@ -54,7 +54,8 @@ def transpose(matrix: Matrix) -> Matrix:
 
     for i in range(num_rows):
         for j in range(num_cols):
-            transposed[j][i] = matrix[i][j]
+            first, second = matrix[i][j]
+            transposed[j][i] = (second, first)
 
     return transposed
 
