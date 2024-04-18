@@ -57,5 +57,5 @@ class FuzzyDeterministicEyeForEye(Player):
         if game_state.vector not in game_state.history:
             return GoodGuy().play(game_state)
         fuzzy_value = self.metric(game_state.previous_matrix[1], game_state.plays[-1][1])
-        return GoodGuy().play(GameState) if fuzzy_value > 0.7 else BadGuy().play(GameState)
+        return GoodGuy().play(game_state) if fuzzy_value > 0.7 else BadGuy().play(game_state)
         
