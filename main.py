@@ -7,19 +7,20 @@ from src.players import BadGuy, AdaptiveEyeForEye, GoodGuy, EyeForEye, Random, S
 def print_tournament_results(tournament: Tournament, index: int):
     print("-" * 50 + "Tournament " + str(index) + "-" * 50)
 
-    rounds = len(tournament.matrices) * (len(tournament.players) - 1)
+    player_name = lambda p, i: player.name if player.name else f"Player {i + 1}"
 
     print("Scores:" + "-" * 50)
     for i, player in enumerate(tournament.players):
-        print(f"Player {i + 1} ({player.__class__.__name__}): {player.score} score")
+        print(f"{player_name(player, i)} ({player.__class__.__name__}): {player.score} score")
 
     winner = tournament.get_winner()
     print("Winner:" + "-" * 50)
-    print(f"Player {tournament.players.index(winner) + 1} ({winner.__class__.__name__}): {winner.score} score")
+    print(
+        f"{player_name(winner, tournament.players.index(winner))} ({winner.__class__.__name__}): {winner.score} score")
 
     loser = tournament.get_loser()
     print("Loser:" + "-" * 50)
-    print(f"Player {tournament.players.index(loser) + 1} ({loser.__class__.__name__}): {loser.score} score")
+    print(f"{player_name(loser, tournament.players.index(loser))} ({loser.__class__.__name__}): {loser.score} score")
 
 
 players = [
@@ -39,7 +40,7 @@ players = [
 
 players = assign_names(players)
 
-matrices = [element for element in get_random_matrices(2)]
+matrices = [element for element in get_random_matrices(5)]
 
 tournament = Tournament(players, matrices, tell_story=True)
 
