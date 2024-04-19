@@ -10,13 +10,6 @@ Vector = Tuple[int, int]
 History = Dict[Vector, List[int]]
 
 
-# ambiente
-# inaccesible porque no se conoce completamente el estado
-# no determinista pues el proximo estado no depende solo de la acción actual, sino además de la acción del oponente
-# no es episódico
-# estático porque no cambia en el tiempo a menos que el agente realice una acción sobre él
-# discreto
-
 class Tournament:
     """
     A class to represent a Tournament.

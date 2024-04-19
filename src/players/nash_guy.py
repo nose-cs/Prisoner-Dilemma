@@ -36,6 +36,7 @@ class NashGuy(Player):
 
             if (not max_expected) or expected > max_expected:
                 max_expected = expected
+
                 max_play = i
 
         return max_play

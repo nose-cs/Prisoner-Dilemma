@@ -41,15 +41,8 @@ players = [
 
 players = assign_names(players)
 
-matrices = [element for element in get_matrices(
-    ["Dilema del prisionero", "Dilema del prisionero", "Dilema del prisionero", "Dilema del prisionero",
-     "Dilema del prisionero", "Dilema del prisionero", "Dilema del prisionero", "Dilema del prisionero",
-     "Dilema del prisionero", "Dilema del prisionero", "Dilema del prisionero", "Dilema del prisionero",
-     "Dilema del prisionero", "Dilema del prisionero", "Dilema del prisionero", "Dilema del prisionero",
-     "Dilema del prisionero", "Dilema del prisionero", "Dilema del prisionero", "Dilema del prisionero",
-     "Dilema del prisionero", "Dilema del prisionero", "Dilema del prisionero", "Dilema del prisionero",
-     "Dilema del prisionero", "Dilema del prisionero", "Dilema del prisionero", "Dilema del prisionero",
-     "Dilema del prisionero", "Dilema del prisionero", "Dilema del prisionero", "Dilema del prisionero", ])]
+matrices = [element for element in
+            get_matrices(["Resolución de disputas en el sector de bienes raíces", "Dilema del prisionero", ])]
 
 tournament = Tournament(players, matrices, tell_story=True)
 
