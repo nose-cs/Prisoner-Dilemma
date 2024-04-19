@@ -14,7 +14,7 @@ obtiene por cada combinación de acciones de los jugadores, cada jugador tiene u
 tomar en cada ronda.
 
 Para más detalles sobre el proyecto, puede consultar el reporte en el
-archivo [[report.pdf](https://github.com/nose-cs/Prisoner-Dilemma/blob/main/docs/report.pdf).
+archivo [report.pdf](https://github.com/nose-cs/Prisoner-Dilemma/blob/main/docs/report.pdf).
 
 ## ¿Cómo ejecutarlo?
 
