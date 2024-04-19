@@ -13,7 +13,7 @@ History = Dict[Vector, List[int]]
 
 class GeminiClient:
     def __init__(self):
-        API_KEY = 'AIzaSyBdMrVOCjzemRTjvM_BMWuyf6iZRbisWUc'
+        API_KEY = 'AIzaSyCl_qFkDcVMJHWeeQsG9woFDrSTLDG6rmg'
         genai.configure(api_key=API_KEY)
         self.model = genai.GenerativeModel('gemini-pro')
 
