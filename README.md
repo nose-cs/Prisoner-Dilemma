@@ -25,4 +25,5 @@ paquetes necesarios ejecute el siguiente comando:
 pip install -r requirements.txt
 ```
 
-En `simulation.ipynb` se da una explicación detallada de cómo crear torneos a partir de ejemplos.
+En `simulation.ipynb` se da una explicación detallada de cómo crear torneos a partir de ejemplos, además también se
+ejemplifica cómo simular estos torneos.
