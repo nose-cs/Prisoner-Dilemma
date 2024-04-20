@@ -8,10 +8,10 @@ class NashGuy(Player):
         self.num_rounds_for_collection = num_rounds_for_collection
         self.count_collection_rounds = 0
 
-    def sum_score(self, matrix, mine_action: int, other_action: int, oponent_history, score: int):
-        super().sum_score(matrix, mine_action, other_action, oponent_history, score)
+    def sum_score(self, game_state: GameState, mine_action: int, other_action: int, oponent_history, score: int):
+        super().sum_score(game_state, mine_action, other_action, oponent_history, score)
 
-        matrix, vector = matrix
+        matrix, vector = game_state.matrix, game_state.vector
 
         self.probs[id(oponent_history)][vector][mine_action][1][other_action] += 1
         self.probs[id(oponent_history)][vector][mine_action] = (self.probs[id(oponent_history)][vector][mine_action][0] + 1, self.probs[id(oponent_history)][vector][mine_action][1])
