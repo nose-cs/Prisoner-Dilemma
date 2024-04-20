@@ -8,9 +8,11 @@ Plays = List[Tuple[int, int]]
 
 
 class GameState:
-    def __init__(self, matrix, vector, history, plays, previous_matrix):
+    def __init__(self, matrix, vector, op_matrix, op_vector, history, plays, previous_matrix):
         self.matrix: Matrix = matrix
         self.vector: Vector = vector
+        self.op_matrix: Matrix = op_matrix
+        self.op_vector: Vector = op_vector
         self.history: History = history
         self.plays: Plays = plays
         self.previous_matrix: Matrix = previous_matrix
@@ -21,7 +23,7 @@ class Player(ABC):
         self.score = 0
         self.name = None
 
-    def sum_score(self, matrix, mine_action: int, other_action: int, opponent_history, score: int):
+    def sum_score(self, game_state: GameState, mine_action: int, other_action: int, opponent_history, score: int):
         self.score += score
 
     def clear(self):

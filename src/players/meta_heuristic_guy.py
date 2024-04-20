@@ -65,16 +65,22 @@ class GeneticGuy(Player):
         super().__init__()
         self.history_length = 5
 
-        population = [self.initialize_strategy() for _ in range(20)]
+        self.global_population = [self.initialize_strategy() for _ in range(20)]
 
         for generation in range(10):
-            population, fitnesses = self.evolve_population(population)
+            self.global_population, fitnesses = self.evolve_population(self.global_population)
 
         best_fitness = max(fitnesses)
         index_best_strategy = fitnesses.index(best_fitness)
-        best_strategy = population[index_best_strategy]
+        self.best_global_strategy = self.global_population[index_best_strategy]
+    
+        self.clear()
 
-        self.strategy = best_strategy
+
+    def clear(self):
+        super().clear()
+        self.strategy = self.best_global_strategy
+        self.population = self.global_population
 
     def get_oponent_similar_history(self, history, vector):
         best = None
@@ -97,8 +103,30 @@ class GeneticGuy(Player):
 
         return best
 
+    def fitness_local(self, strategy, matrix, vector, opponent_history, opponent_move):
+        player_move = self.getStrategyResponse(strategy, opponent_history, vector)
+        gain = matrix[player_move][opponent_move][0]
+
+        return gain
+
+    def sum_score(self, game_state: GameState, mine_action: int, other_action: int, opponent_history, score: int):
+        super().sum_score(game_state, mine_action, other_action, opponent_history, score)
+
+        shistory = self.get_oponent_similar_history(opponent_history, game_state.op_vector)
+
+        if shistory:
+            opponent_history = shistory[-self.history_length:] if len(shistory) >= self.history_length else shistory
+
+        for generation in range(2):
+            self.population, fitnesses = self.evolve_population(self.population, lambda s, strategy, simulations=10: self.fitness_local(strategy, game_state.matrix, game_state.vector, opponent_history, other_action))
+
+        best_fitness = max(fitnesses)
+        index_best_strategy = fitnesses.index(best_fitness)
+        self.strategy = self.population[index_best_strategy]
+
+
     def play(self, game_state: GameState) -> int:
-        shistory = self.get_oponent_similar_history(game_state.history, game_state.vector)
+        shistory = self.get_oponent_similar_history(game_state.history, game_state.op_vector)
 
         if shistory:
             oponent_history = shistory[-self.history_length:] if len(shistory) >= self.history_length else shistory
@@ -135,7 +163,7 @@ class GeneticGuy(Player):
     def initialize_strategy(self):
         strategy = {}
 
-        for i in range(10):
+        for i in range(20):
             n = np.random.randint(2, 3)
 
             history = tuple(np.random.random_integers(0, n - 1, self.history_length))
@@ -174,9 +202,9 @@ class GeneticGuy(Player):
         selected = random.choices(population, weights=fitnesses, k=num_selected)
         return selected
 
-    def evolve_population(self, population):
+    def evolve_population(self, population, fitness=fitness):
         new_population = []
-        fitness_scores = [self.fitness(strategy) for strategy in population]
+        fitness_scores = [fitness(self, strategy) for strategy in population]
 
         # Selection
         # selected_indices = np.argsort(fitness_scores)[-len(population)//2:]
