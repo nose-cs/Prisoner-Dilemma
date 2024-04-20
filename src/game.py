@@ -3,7 +3,6 @@ from typing import List, Dict, Tuple
 from src.generate_matrix import MatrixStructure
 from src.players import Player
 from src.players.player import GameState
-from src.storyteller import StoryTeller
 
 Matrix = List[List[Tuple[float, float]]]
 Vector = Tuple[int, int]
@@ -14,17 +13,17 @@ class Tournament:
     """
     A class to represent a Tournament.
 
-    Attributes:
-    - players (List[Player]): List of players participating in the tournament.
-    - matrices (List[Tuple[Matrix, Vector]]): List of matrices for the tournament.
-    - history (Dict[Tuple[int, int], Dict[Vector, List[int]]]): History of previous actions.
+    Attributes
+    ----------
+    players (List[Player]): the list of players in the tournament.
+    matrices (List[MatrixStructure]): the list of matrices to play each match.
+    history (Dict[Tuple[int, int], History]): the history of each match.
     """
 
-    def __init__(self, players: List[Player], matrices: List[MatrixStructure], tell_story=False):
+    def __init__(self, players: List[Player], matrices: List[MatrixStructure]):
         self.players = players
         self.matrices = matrices
         self.history: Dict[Tuple[int, int], History] = {}
-        self.storyteller = StoryTeller() if tell_story else None
 
     def play(self):
         """Play the tournament."""
@@ -40,7 +39,12 @@ class Tournament:
                 self._play_match(player1, player2, history_key)
 
     def _play_match(self, player1: Player, player2: Player, history_key: Tuple[int, int]):
-        """Play a match between two players."""
+        """
+        Play a match between two players. A match consists of playing all the matrices in the tournament.
+        :param player1: the first player.
+        :param player2: the second player.
+        :param history_key: the key to store the history of the match.
+        """
         history1 = self.history.get(history_key, {})
         history2 = self.history.get((history_key[1], history_key[0]), {})
         plays = []
@@ -66,7 +70,19 @@ class Tournament:
         self.history[(history_key[1], history_key[0])] = history2
 
     @staticmethod
-    def _play_round(matrix_structure, player1: Player, player2: Player, history1, history2, plays, last_matrix):
+    def _play_round(matrix_structure: MatrixStructure, player1: Player, player2: Player, history1: History,
+                    history2: History, plays, last_matrix) -> Tuple[int, int, Tuple[int, int]]:
+        """
+        Play a round between two players.
+        :param matrix_structure: the matrix to play the round, for each player (the same if the matrix is symmetric, the transpose if not).
+        :param player1: the first player.
+        :param player2: the second player.
+        :param history1: history of moves of player1 against player2.
+        :param history2: history of moves of player2 against player1.
+        :param plays: the list of plays in the match.
+        :param last_matrix: the last matrix played.
+        :return: the actions of the players and the scores of the round for each player.
+        """
         matrix1, vector1, matrix2, vector2 = matrix_structure.matrix1, matrix_structure.vector1, matrix_structure.matrix2, matrix_structure.vector2
         game_state_1 = GameState(matrix1, vector1, history2, plays, last_matrix)
         game_state_2 = GameState(matrix2, vector2, history1, plays, last_matrix)
