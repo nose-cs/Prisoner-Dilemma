@@ -3,5 +3,5 @@ from .bad_guy import BadGuy
 from .good_guy import GoodGuy
 from .eye_for_eye import EyeForEye, AdaptiveEyeForEye, FuzzyEyeForEye, FuzzyDeterministicEyeForEye
 from .random import Random
-from .meta_heuristic_guy import SimpleMetaHeuristicGuy, GeneticGuy
+from .meta_heuristic_guy import SimpleMetaHeuristicGuy, GeneticGuy, AnotherGeneticGuy
 from .nash_guy import NashGuy
