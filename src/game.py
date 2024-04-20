@@ -51,15 +51,19 @@ class Tournament:
         last_matrix = None
 
         for matrix_structure in self.matrices:
-            action1, action2, scores = self._play_round(matrix_structure, player1, player2,
-                                                        history1, history2, plays, last_matrix)
+            matrix1, vector1, matrix2, vector2 = matrix_structure.matrix1, matrix_structure.vector1, matrix_structure.matrix2, matrix_structure.vector2
+            game_state_1 = GameState(matrix1, vector1, matrix2, vector2, history2, plays, last_matrix)
+            game_state_2 = GameState(matrix2, vector2, matrix1, vector1, history1, plays, last_matrix)
+
+            action1, action2, scores = self._play_round(matrix_structure.matrix1, player1, player2, game_state_1,
+                                                        game_state_2)
             score1, score2 = scores
 
             plays.append((action1, action2))
 
             matrix1, vector1, matrix2, vector2 = matrix_structure.matrix1, matrix_structure.vector1, matrix_structure.matrix2, matrix_structure.vector2
-            player1.sum_score((matrix1, vector1), action1, action2, history2, score1)
-            player2.sum_score((matrix2, vector2), action2, action1, history1, score2)
+            player1.sum_score(game_state_1, action1, action2, history2, score1)
+            player2.sum_score(game_state_2, action2, action1, history1, score2)
 
             last_matrix = (matrix1, matrix2)
 
@@ -70,26 +74,21 @@ class Tournament:
         self.history[(history_key[1], history_key[0])] = history2
 
     @staticmethod
-    def _play_round(matrix_structure: MatrixStructure, player1: Player, player2: Player, history1: History,
-                    history2: History, plays, last_matrix) -> Tuple[int, int, Tuple[int, int]]:
+    def _play_round(matrix, player1: Player, player2, game_state_1: GameState, game_state_2: GameState) -> Tuple[
+        int, int, Tuple[int, int]]:
         """
         Play a round between two players.
-        :param matrix_structure: the matrix to play the round, for each player (the same if the matrix is symmetric, the transpose if not).
+        :param matrix: the matrix to play the round, for each player (the same if the matrix is symmetric, the transpose if not).
         :param player1: the first player.
         :param player2: the second player.
-        :param history1: history of moves of player1 against player2.
-        :param history2: history of moves of player2 against player1.
-        :param plays: the list of plays in the match.
-        :param last_matrix: the last matrix played.
+        :param game_state_1: the game state for the first player.
+        :param game_state_2: the game state for the second player.
         :return: the actions of the players and the scores of the round for each player.
         """
-        matrix1, vector1, matrix2, vector2 = matrix_structure.matrix1, matrix_structure.vector1, matrix_structure.matrix2, matrix_structure.vector2
-        game_state_1 = GameState(matrix1, vector1, history2, plays, last_matrix)
-        game_state_2 = GameState(matrix2, vector2, history1, plays, last_matrix)
         action1 = player1.play(game_state_1)
         action2 = player2.play(game_state_2)
 
-        return action1, action2, matrix1[action1][action2]
+        return action1, action2, matrix[action1][action2]
 
     def _clear(self):
         """Clear the scores and history for all players."""
