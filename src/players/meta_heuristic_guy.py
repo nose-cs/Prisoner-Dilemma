@@ -23,18 +23,16 @@ class SimpleMetaHeuristicGuy(Player):
 
         return None
 
-    def sum_score(self, matrix, mine_action: int, other_action: int, oponent_history, score: int):
-        super().sum_score(matrix, mine_action, other_action, oponent_history, score)
-
-        _, vector = matrix
+    def learn(self, game_state: GameState, mine_action: int, other_action: int, opponent_history, reward:  float):
+        vector = game_state.vector
 
         id_vector = self.get_memory_vector_similar(vector, mine_action)
 
         if id_vector:
             self.memory[id_vector, mine_action] = (
-                self.memory[id_vector, mine_action][0] + score, self.memory[id_vector, mine_action][1] + 1)
+                self.memory[id_vector, mine_action][0] + reward, self.memory[id_vector, mine_action][1] + 1)
         else:
-            self.memory[vector, mine_action] = (score, 1)
+            self.memory[vector, mine_action] = (reward, 1)
             id_vector = vector
 
         sum, count = self.memory[id_vector, mine_action]
@@ -45,6 +43,10 @@ class SimpleMetaHeuristicGuy(Player):
                 self.max_avg[id_vector] = (avg, mine_action)
         else:
             self.max_avg[id_vector] = (avg, mine_action)
+
+    def sum_score(self, game_state: GameState, mine_action: int, other_action: int, opponent_history, score:  float):
+        super().sum_score(game_state, mine_action, other_action, opponent_history, score)
+        self.learn(game_state, mine_action, other_action, opponent_history, score)
 
     def clear(self):
         super().clear()
@@ -244,9 +246,7 @@ class AnotherGeneticGuy(Player):
 
         return gain
 
-    def sum_score(self, game_state: GameState, mine_action: int, other_action: int, opponent_history, score: int):
-        super().sum_score(game_state, mine_action, other_action, opponent_history, score)
-
+    def learn(self, game_state: GameState, mine_action: int, other_action: int, opponent_history, reward: float):
         shistory = self.get_oponent_similar_history(opponent_history, game_state.op_vector)
 
         if shistory:
@@ -261,6 +261,10 @@ class AnotherGeneticGuy(Player):
         best_fitness = max(fitnesses)
         index_best_strategy = fitnesses.index(best_fitness)
         self.strategy = self.population[index_best_strategy]
+
+    def sum_score(self, game_state: GameState, mine_action: int, other_action: int, opponent_history, score:  float):
+        super().sum_score(game_state, mine_action, other_action, opponent_history, score)
+        self.learn(game_state, mine_action, other_action, opponent_history, score)
 
     def play(self, game_state: GameState) -> int:
         shistory = self.get_oponent_similar_history(game_state.history, game_state.op_vector)

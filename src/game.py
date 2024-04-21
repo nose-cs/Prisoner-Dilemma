@@ -74,11 +74,12 @@ class Tournament:
         self.history[(history_key[1], history_key[0])] = history2
 
     @staticmethod
-    def _play_round(matrix, player1: Player, player2, game_state_1: GameState, game_state_2: GameState) -> Tuple[
-        int, int, Tuple[int, int]]:
+    def _play_round(matrix: Matrix, player1: Player, player2: Player, game_state_1: GameState, game_state_2: GameState) -> Tuple[
+        int, int, Tuple[float, float]]:
         """
         Play a round between two players.
-        :param matrix: the matrix to play the round, for each player (the same if the matrix is symmetric, the transpose if not).
+        :param matrix: the matrix to play the round, for each player (the same if the matrix is symmetric,
+            the transpose if not).
         :param player1: the first player.
         :param player2: the second player.
         :param game_state_1: the game state for the first player.

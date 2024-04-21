@@ -1,5 +1,6 @@
 from src.players import Player, GameState
 
+
 class NashGuy(Player):
     def __init__(self, num_rounds_for_collection=1) -> None:
         super().__init__()
@@ -8,20 +9,24 @@ class NashGuy(Player):
         self.num_rounds_for_collection = num_rounds_for_collection
         self.count_collection_rounds = 0
 
-    def sum_score(self, game_state: GameState, mine_action: int, other_action: int, oponent_history, score: int):
-        super().sum_score(game_state, mine_action, other_action, oponent_history, score)
-
+    def learn(self, game_state: GameState, mine_action: int, other_action: int, opponent_history, reward: float):
         matrix, vector = game_state.matrix, game_state.vector
 
-        self.probs[id(oponent_history)][vector][mine_action][1][other_action] += 1
-        self.probs[id(oponent_history)][vector][mine_action] = (self.probs[id(oponent_history)][vector][mine_action][0] + 1, self.probs[id(oponent_history)][vector][mine_action][1])
+        self.probs[id(opponent_history)][vector][mine_action][1][other_action] += 1
+        self.probs[id(opponent_history)][vector][mine_action] = (
+            self.probs[id(opponent_history)][vector][mine_action][0] + 1,
+            self.probs[id(opponent_history)][vector][mine_action][1])
+
+    def sum_score(self, game_state: GameState, mine_action: int, other_action: int, opponent_history, score: float):
+        super().sum_score(game_state, mine_action, other_action, opponent_history, score)
+        self.learn(game_state, mine_action, other_action, opponent_history, score)
 
     def play(self, game_state: GameState) -> int:
         max_play = None
         max_expected = None
 
-        oponent = self.probs.setdefault(id(game_state.history), {})
-        plays = oponent.setdefault(game_state.vector, {})
+        opponent = self.probs.setdefault(id(game_state.history), {})
+        plays = opponent.setdefault(game_state.vector, {})
 
         for i, row in enumerate(game_state.matrix):
             expected = 0
@@ -45,7 +50,7 @@ class NashGuy(Player):
                 max_play = i
 
         return max_play
-    
+
     def clear(self):
         self.probs = {}
         self.count_collection_rounds = 0

@@ -23,7 +23,7 @@ class Player(ABC):
         self.score = 0
         self.name = None
 
-    def sum_score(self, game_state: GameState, mine_action: int, other_action: int, opponent_history, score: int):
+    def sum_score(self, game_state: GameState, mine_action: int, other_action: int, opponent_history, score: float):
         self.score += score
 
     def clear(self):
