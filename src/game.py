@@ -57,18 +57,14 @@ class Tournament:
         action1 = play_event1.strategy
         action2 = play_event2.strategy
 
-        if (player1, player2) in self.history:
-            history1 = self.history[(player1, player2)]
-        else:
-            history1 = {}
+        if not (player1, player2) in self.history:
+            self.history[(player1, player2)] = {}
 
-        if (player2, player1) in self.history:
-            history2 = self.history[(player2, player1)]
-        else:
-            history2 = {}
+        if not (player2, player1) in self.history:
+            self.history[(player2, player1)] = {}
 
-        history1.setdefault(vector1, []).append(action1)
-        history2.setdefault(vector2, []).append(action2)
+        self.history[(player1, player2)].setdefault(vector1, []).append(action1)
+        self.history[(player2, player1)].setdefault(vector2, []).append(action2)
 
     def set_players_tournament_info(self):
         for i, player in enumerate(self.players):

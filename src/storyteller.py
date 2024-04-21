@@ -60,6 +60,9 @@ class StoryTeller:
 
         response = self.client.generate_content(story)
 
+        if index == 0:
+            return self.to_markdown(response.text)
+
         return self.to_markdown(f"### Round {index}\n\n" + response.text)
 
     def tell_match_story(self, titles: List[str], player1: Player, player2: Player,
@@ -107,6 +110,10 @@ class StoryTeller:
             match_story += f"\n\n### Round {i + 1}\n" + story + "\n\n"
 
         response = self.client.generate_content(match_story)
+
+        if index == 0:
+            return self.to_markdown(response.text)
+
         return self.to_markdown(f"## Match {index}\n\n" + response.text)
 
 
