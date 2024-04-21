@@ -1,27 +1,29 @@
-from src.players import Player, GameState
+from src.players import LearningPlayer, GameState, PlayEvent
 
-class NashGuy(Player):
+
+class NashGuy(LearningPlayer):
     def __init__(self, num_rounds_for_collection=1) -> None:
         super().__init__()
-
         self.probs = {}
         self.num_rounds_for_collection = num_rounds_for_collection
         self.count_collection_rounds = 0
 
-    def sum_score(self, game_state: GameState, mine_action: int, other_action: int, oponent_history, score: int):
-        super().sum_score(game_state, mine_action, other_action, oponent_history, score)
+    def learn(self, game_state: GameState, mine_action: int, other_action: int):
+        vector = game_state.vector
+        opponent_id = game_state.opponent_id
 
-        matrix, vector = game_state.matrix, game_state.vector
+        self.probs[opponent_id][vector][mine_action][1][other_action] += 1
+        self.probs[opponent_id][vector][mine_action] = (
+            self.probs[opponent_id][vector][mine_action][0] + 1,
+            self.probs[opponent_id][vector][mine_action][1])
 
-        self.probs[id(oponent_history)][vector][mine_action][1][other_action] += 1
-        self.probs[id(oponent_history)][vector][mine_action] = (self.probs[id(oponent_history)][vector][mine_action][0] + 1, self.probs[id(oponent_history)][vector][mine_action][1])
-
-    def play(self, game_state: GameState) -> int:
+    def action(self, game_state: GameState) -> PlayEvent:
         max_play = None
         max_expected = None
+        opponent_id = game_state.opponent_id
 
-        oponent = self.probs.setdefault(id(game_state.history), {})
-        plays = oponent.setdefault(game_state.vector, {})
+        opponent = self.probs.setdefault(opponent_id, {})
+        plays = opponent.setdefault(game_state.vector, {})
 
         for i, row in enumerate(game_state.matrix):
             expected = 0
@@ -33,8 +35,7 @@ class NashGuy(Player):
             if self.count_collection_rounds < self.num_rounds_for_collection:
                 if i == len(game_state.matrix) - 1:
                     self.count_collection_rounds += 1
-
-                return i
+                return PlayEvent(issuer_id=self.identifier, strategy=i)
 
             for j, gains in enumerate(row):
                 expected += gains[0] * (counts[j] / total)
@@ -44,9 +45,4 @@ class NashGuy(Player):
 
                 max_play = i
 
-        return max_play
-    
-    def clear(self):
-        self.probs = {}
-        self.count_collection_rounds = 0
-        return super().clear()
+        return PlayEvent(issuer_id=self.identifier, strategy=max_play)

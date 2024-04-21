@@ -4,7 +4,7 @@ from typing import List, Tuple, Dict
 import google.generativeai as genai
 from IPython.display import Markdown
 
-from src.deserialization import decision_matrices
+from src.decision_matrices_deserialization import decision_matrices
 from src.players import Player
 
 Vector = Tuple[int, int]
@@ -30,8 +30,19 @@ class StoryTeller:
         text = text.replace('•', '  *')
         return Markdown(textwrap.indent(text, '> ', predicate=lambda _: True))
 
-    def tell_round_story(self, title, player1: Player, player2: Player, action1, action2, index=0,
-                         description='historia breve'):
+    def tell_round_story(self, title: str, player1: Player, player2: Player, action1: int, action2: int, index: int = 0,
+                         description: str = 'historia breve') -> Markdown:
+        """
+        Generates a story for a round based on the decision matrix.
+        :param title: the title of the decision matrix.
+        :param player1: the first player.
+        :param player2: the second player.
+        :param action1: the action of the first player.
+        :param action2: the action of the second player.
+        :param index: the index of the round.
+        :param description: the description of the story.
+        :return: the story.
+        """
         decision_matrix = decision_matrices[title]
         action_player_1 = decision_matrix.actions[action1]
         action_player_2 = decision_matrix.actions[action2]
@@ -49,10 +60,23 @@ class StoryTeller:
 
         response = self.client.generate_content(story)
 
+        if index == 0:
+            return self.to_markdown(response.text)
+
         return self.to_markdown(f"### Round {index}\n\n" + response.text)
 
     def tell_match_story(self, titles: List[str], player1: Player, player2: Player,
-                         actions: List[Tuple[int, int]], index=0, description='historia breve'):
+                         actions: List[Tuple[int, int]], index: int = 0, description: str = 'historia breve'):
+        """
+        Generates a story for a match based on the decision matrices and the actions taken by the players on each round.
+        :param titles: the titles of the decision matrices.
+        :param player1: the first player.
+        :param player2: the second player.
+        :param actions: the actions taken by the players on each round.
+        :param index: the index of the match.
+        :param description: the description of the story.
+        :return: the story.
+        """
         player1_name = player1.name
         player2_name = player2.name
 
@@ -86,6 +110,10 @@ class StoryTeller:
             match_story += f"\n\n### Round {i + 1}\n" + story + "\n\n"
 
         response = self.client.generate_content(match_story)
+
+        if index == 0:
+            return self.to_markdown(response.text)
+
         return self.to_markdown(f"## Match {index}\n\n" + response.text)
 
 
@@ -98,7 +126,7 @@ class Stratascriptor:
         text = text.replace('•', '  *')
         return Markdown(textwrap.indent(text, '> ', predicate=lambda _: True))
 
-    def describe_strategy_based_on_vectors(self, player: Player, history: History):
+    def describe_strategy_based_on_vectors(self, history: History):
         prompt = f"Describe la estrategia del jugador a partir del siguiente historial de decisiones.\n"
 
         prompt += '''

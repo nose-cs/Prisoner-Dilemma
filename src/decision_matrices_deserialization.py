@@ -14,7 +14,7 @@ class DecisionMatrix:
         self.actions = actions
         self.story = story
 
-    def fix_matrix(self, matrix: List[List[List[int]]]) -> Matrix:
+    def fix_matrix(self, matrix: List[List[List[int]]]):
         normalized_matrix = self.normalize_matrix_data(matrix)
         return [[tuple(cell) for cell in row] for row in normalized_matrix]
 

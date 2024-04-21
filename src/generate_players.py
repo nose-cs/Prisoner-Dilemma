@@ -3,7 +3,7 @@ from typing import List
 
 from src.players import Player
 
-nombres_base = [
+names = [
     "Ana", "Carlos", "David", "Elena", "Fernando",
     "Gabriela", "Hugo", "Inés", "Javier", "Karen",
     "Luis", "María", "Natalia", "Óscar", "Paula",
@@ -30,7 +30,7 @@ nombres_base = [
 
 
 def assign_names(players: List[Player]) -> List[Player]:
-    available_names = nombres_base.copy()
+    available_names = names.copy()
 
     for i, player in enumerate(players):
         if available_names:

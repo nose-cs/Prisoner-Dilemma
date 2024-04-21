@@ -1,7 +1,7 @@
 import random
 from typing import List, Tuple
 
-from src.deserialization import decision_matrices
+from src.decision_matrices_deserialization import decision_matrices
 
 Matrix = List[List[Tuple[float, float]]]
 
