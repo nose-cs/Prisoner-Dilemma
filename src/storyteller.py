@@ -4,7 +4,7 @@ from typing import List, Tuple, Dict
 import google.generativeai as genai
 from IPython.display import Markdown
 
-from src.deserialization import decision_matrices
+from src.decision_matrices_deserialization import decision_matrices
 from src.players import Player
 
 Vector = Tuple[int, int]

@@ -1,35 +1,36 @@
 import random
+from typing import List
 
-from src.players import Player, GameState
+from src.players import Player, PlayerWithHistory, GameState, PlayEvent
 
 
-class Random(Player):
-    def play(self, game_state: GameState) -> int:
-        matrix_len = len(game_state.matrix)
-        return random.choice(range(matrix_len))
+class RandomGuy(Player):
+    def action(self, state: GameState) -> PlayEvent:
+        matrix_len = len(state.matrix)
+        return PlayEvent(issuer_id=self.identifier, strategy=random.choice(range(matrix_len)))
 
 
 class BadGuy(Player):
-    def play(self, game_state: GameState) -> int:
+    def action(self, state: GameState) -> PlayEvent:
         maxx = None
         index_max = None
 
-        for i, row in enumerate(game_state.matrix):
+        for i, row in enumerate(state.matrix):
             min_row = min(row, key=lambda actions: actions[0])
 
             if (not maxx) or min_row > maxx:
                 maxx = min_row
                 index_max = i
 
-        return index_max
+        return PlayEvent(issuer_id=self.identifier, strategy=index_max)
 
 
 class GoodGuy(Player):
-    def play(self, game_state: GameState) -> int:
+    def action(self, state: GameState) -> PlayEvent:
         max = None
         index_max = None
 
-        for i, row in enumerate(game_state.matrix):
+        for i, row in enumerate(state.matrix):
             average = 0
 
             for actions in row:
@@ -39,26 +40,32 @@ class GoodGuy(Player):
                 max = average
                 index_max = i
 
-        return index_max
+        return PlayEvent(issuer_id=self.identifier, strategy=index_max)
 
 
-class EyeForEye(Player):
-    def play(self, game_state: GameState) -> int:
-        if game_state.vector not in game_state.history:
-            return GoodGuy().play(game_state)
-        return game_state.history[game_state.vector][-1]
+class EyeForEye(PlayerWithHistory):
+    def action(self, state: GameState) -> PlayEvent:
+        history_against_opponent = self.history[state.opponent_id] if state.opponent_id in self.history else {}
+        if state.vector not in history_against_opponent:
+            strategy = GoodGuy().action(state).strategy
+        else:
+            strategy = history_against_opponent[state.vector][-1]
+        return PlayEvent(issuer_id=self.identifier, strategy=strategy)
 
 
-class AdaptiveEyeForEye(Player):
+class AdaptiveEyeForEye(PlayerWithHistory):
     def __init__(self, window=5) -> None:
         super().__init__()
         self.window = window
 
-    def play(self, game_state: GameState) -> int:
-        if game_state.vector not in game_state.history or len(game_state.history[game_state.vector]) < self.window:
-            return GoodGuy().play(game_state)
+    def action(self, state: GameState) -> PlayEvent:
+        history_against_opponent = self.history[state.opponent_id] if state.opponent_id in self.history else {}
+        if state.vector not in history_against_opponent or len(
+                history_against_opponent[state.vector]) < self.window:
+            strategy = GoodGuy().action(state).strategy
+            return PlayEvent(issuer_id=self.identifier, strategy=strategy)
 
-        last_plays = game_state.history[game_state.vector][-self.window:]
+        last_plays: List[int] = history_against_opponent[state.vector][-self.window:]
 
         count = {}
 
@@ -68,4 +75,6 @@ class AdaptiveEyeForEye(Player):
             else:
                 count[play] += 1
 
-        return sorted(count.items(), key=lambda pc: pc[1])[0][0]
+        most_common = sorted(count.items(), key=lambda pc: pc[1])[0][0]
+
+        return PlayEvent(issuer_id=self.identifier, strategy=most_common)
