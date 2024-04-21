@@ -5,11 +5,21 @@ from src.players import Player
 from src.players.player import GameState, PlayEvent
 
 Matrix = List[List[Tuple[float, float]]]
-Vector = Tuple[int, int]
+Vector = Tuple
 History = Dict[Vector, List[int]]
 
 
 class Tournament:
+    """
+    Represents the environment in which the players compete.
+
+    Attributes:
+        players (List[Player]): The players in the tournament.
+        scores (List[int]): The scores of the players in the tournament.
+        matrices (List[MatrixStructure]): The matrices that represent the rounds in the tournament.
+        history (Dict[Tuple[int, int], History]): The history of the tournament.
+    """
+
     def __init__(self, players: List[Player], matrices: List[MatrixStructure]):
         self.players = players
         self.scores = [0] * len(players)
