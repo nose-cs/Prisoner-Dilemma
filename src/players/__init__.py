@@ -1,7 +1,5 @@
 from .player import Player, GameState
-from .bad_guy import BadGuy
-from .good_guy import GoodGuy
-from .eye_for_eye import EyeForEye, AdaptiveEyeForEye, FuzzyEyeForEye, FuzzyDeterministicEyeForEye
-from .random import Random
+from .classic_prisoner_dilemma_players import Random, BadGuy, GoodGuy, EyeForEye, AdaptiveEyeForEye
+from .fuzzy_eye_for_eye import FuzzyEyeForEye, FuzzyDeterministicEyeForEye
 from .meta_heuristic_guy import SimpleMetaHeuristicGuy, GeneticGuy, AnotherGeneticGuy
 from .nash_guy import NashGuy
