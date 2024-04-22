@@ -1,18 +1,30 @@
 import random
+from dataclasses import dataclass
 from typing import List, Tuple
 
 from src.decision_matrices_deserialization import decision_matrices
 
 Matrix = List[List[Tuple[float, float]]]
+Vector = Tuple
 
 
+@dataclass
 class MatrixStructure:
-    def __init__(self, matrix1, vector1, matrix2, vector2, matrix_title: str):
-        self.matrix1 = matrix1
-        self.vector1 = vector1
-        self.matrix2 = matrix2
-        self.vector2 = vector2
-        self.matrix_title = matrix_title
+    """
+    Represents a decision matrix.
+
+    Attributes:
+        matrix1 (Matrix): The matrix for the first player.
+        vector1 (Vector): The vector that represents the first matrix.
+        matrix2 (Matrix): The matrix for the second player.
+        vector2 (Vector): The vector that represents the second matrix.
+        matrix_title (str): The title of the matrix.
+    """
+    matrix1: Matrix
+    vector1: Vector
+    matrix2: Matrix
+    vector2: Vector
+    matrix_title: str
 
 
 def get_matrix_len(len_vector):
@@ -74,13 +86,18 @@ def is_symmetric(matrix: Matrix) -> bool:
 
 
 def get_matrices(titles: List[str]) -> List[MatrixStructure]:
+    """
+    Get the matrices for the given titles.
+    :param titles: The titles of the matrices.
+    :return: The matrices.
+    """
     matrices = []
     for title in titles:
         decision_matrix = decision_matrices[title]
         matrix1: Matrix = decision_matrix.matrix
-        vector1 = vectorize(matrix1)
+        vector1: Vector = vectorize(matrix1)
         matrix2: Matrix = matrix1 if is_symmetric(matrix1) else transpose(matrix1)
-        vector2 = vector1 if is_symmetric(matrix1) else vectorize(matrix2)
+        vector2: Vector = vector1 if is_symmetric(matrix1) else vectorize(matrix2)
         matrices.append(MatrixStructure(matrix1, vector1, matrix2, vector2, title))
     return matrices
 
